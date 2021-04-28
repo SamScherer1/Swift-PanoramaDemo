@@ -308,9 +308,7 @@
     
 }
 
-- (void)executeRotateGimbal
-{
-    
+- (void)executeRotateGimbal {
     DJIGimbal *gimbal = [self fetchGimbal];
     __weak DJICamera *camera = [self fetchCamera];
     
@@ -327,9 +325,16 @@
     
     for(int i = 0; i < PHOTO_NUMBER; i++){
         
+        NSLog(@"SS Start Shoot Photo: %i", i);
         [camera setShootPhotoMode:DJICameraShootPhotoModeSingle withCompletion:^(NSError * _Nullable error) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [camera startShootPhotoWithCompletion:nil];
+                [camera startShootPhotoWithCompletion:^(NSError * _Nullable error) {
+                    if (error) {
+                        NSLog(@"SS ShootPhotoError: %@", error.description);
+                    } else {
+                        NSLog(@"SS Successfully Shot Photo");
+                    }
+                }];
             });
         }];
 
@@ -344,20 +349,18 @@
             yawAngle = yawAngle - 360;
         }
         yawRotation = @(yawAngle);
-        
-//        DJIGimbalRotation *rotation = [DJIGimbalRotation gimbalRotationWithPitchValue:pitchRotation
-//                                                                            rollValue:rollRotation
-//                                                                             yawValue:yawRotation
-//                                                                                 time:1
-//                                                                                 mode:DJIGimbalRotationModeAbsoluteAngle];
+    
         DJIGimbalRotation *rotation = [DJIGimbalRotation gimbalRotationWithPitchValue:pitchRotation
                                                                             rollValue:rollRotation
                                                                              yawValue:yawRotation
                                                                                  time:1
                                                                                  mode:DJIGimbalRotationModeAbsoluteAngle
-                                                                               ignore:NO];//TODOIgnore?
+                                                                               ignore:NO];//TODO: Ignore? doesn't seem to affect the gimbal rotations...
         
         [gimbal rotateWithRotation:rotation completion:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"SS Rotation Error: %@", error.description);
+            }
         }];
         
         sleep(2);
