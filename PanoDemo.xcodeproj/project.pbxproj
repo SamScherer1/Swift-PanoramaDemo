@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A37FDDA2639EACA00BB8D99 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */; };
 		4A57C72C45ACD09771D23046 /* libPods-PanoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */; };
 		A419408D1DCB41970076478C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419408C1DCB41970076478C /* opencv2.framework */; };
 		A46985B021343CA6001A1F08 /* DJIWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46985AF21343C97001A1F08 /* DJIWidget.framework */; };
@@ -64,6 +65,8 @@
 
 /* Begin PBXFileReference section */
 		0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PanoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A37FDD82639EAC900BB8D99 /* PanoDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PanoDemo-Bridging-Header.h"; sourceTree = "<group>"; };
+		3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewController.swift; sourceTree = "<group>"; };
 		3E5237D4185BE95C5C9375F0 /* Pods-PanoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.release.xcconfig"; path = "Target Support Files/Pods-PanoDemo/Pods-PanoDemo.release.xcconfig"; sourceTree = "<group>"; };
 		A419408C1DCB41970076478C /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = PanoDemo/Frameworks/opencv2.framework; sourceTree = "<group>"; };
 		A46985AA21343C96001A1F08 /* DJIWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DJIWidget.xcodeproj; path = DJIWidget/DJIWidget.xcodeproj; sourceTree = "<group>"; };
@@ -243,8 +246,10 @@
 			children = (
 				B349F8A41B68816600B5FEA6 /* CaptureViewController.h */,
 				B349F8A51B68816600B5FEA6 /* CaptureViewController.m */,
+				3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */,
 				B349F9BA1B69F96700B5FEA6 /* StitchingViewController.h */,
 				B349F9BB1B69F96700B5FEA6 /* StitchingViewController.mm */,
+				3A37FDD82639EAC900BB8D99 /* PanoDemo-Bridging-Header.h */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -285,6 +290,7 @@
 					B349F8771B68804900B5FEA6 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = R725LZS4G8;
+						LastSwiftMigration = 1240;
 					};
 				};
 			};
@@ -388,6 +394,7 @@
 				A4FE15881B8EEF1500C58EB3 /* StitchingWrapper.cpp in Sources */,
 				B349F87E1B68804900B5FEA6 /* main.m in Sources */,
 				B349F8A61B68816600B5FEA6 /* CaptureViewController.m in Sources */,
+				3A37FDDA2639EACA00BB8D99 /* CaptureViewController.swift in Sources */,
 				A4FE15871B8EEF1500C58EB3 /* Stitching.mm in Sources */,
 				B349F9BC1B69F96700B5FEA6 /* StitchingViewController.mm in Sources */,
 				A4FE15861B8EEF1500C58EB3 /* OpenCVConversion.mm in Sources */,
@@ -512,6 +519,7 @@
 			baseConfigurationReference = AC0235A8882B3AC2D59987DC /* Pods-PanoDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = R725LZS4G8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -532,6 +540,9 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = DJISwiftDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PanoDemo/PanoDemo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_WORKSPACE = YES;
 				VALID_ARCHS = "arm64 arm64e armv7s";
 			};
@@ -542,6 +553,7 @@
 			baseConfigurationReference = 3E5237D4185BE95C5C9375F0 /* Pods-PanoDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = R725LZS4G8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -562,6 +574,8 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = DJISwiftDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PanoDemo/PanoDemo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				VALIDATE_WORKSPACE = YES;
 				VALID_ARCHS = "arm64 arm64e armv7s";
 			};

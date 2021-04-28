@@ -1,18 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="15G1510" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="F5E-Vz-n1R">
-    <device id="ipad9_7" orientation="landscape">
-        <adaptation id="fullscreen"/>
-    </device>
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="F5E-Vz-n1R">
+    <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Capture View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="CaptureViewController" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="CaptureViewController" customModule="PanoDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -21,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmD-2g-uiC">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmD-2g-uiC">
                                 <rect key="frame" x="346" y="155" width="101" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="mrt-Ra-FQf"/>
@@ -31,10 +29,10 @@
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="onCaptureButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="L8h-Vm-iXu"/>
+                                    <action selector="onCaptureButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="gJ4-cR-aY7"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hUb-u1-Wwn">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hUb-u1-Wwn">
                                 <rect key="frame" x="467" y="155" width="96" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="96" id="OGx-5C-piS"/>
@@ -44,10 +42,10 @@
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="onDownloadButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RWW-Fp-hHI"/>
+                                    <action selector="onDownloadButtonClicked:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eVq-62-Z2K"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="luc-AT-VNw">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="luc-AT-VNw">
                                 <rect key="frame" x="583" y="155" width="96" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="96" id="G96-a0-vJy"/>
@@ -142,10 +140,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="t9h-oq-V4v"/>
                     <connections>
-                        <outlet property="captureBtn" destination="FmD-2g-uiC" id="tne-mS-51n"/>
-                        <outlet property="downloadBtn" destination="hUb-u1-Wwn" id="Suj-7K-kSx"/>
-                        <outlet property="fpvPreviewView" destination="uTK-dR-UVx" id="IP9-Nt-hrR"/>
-                        <outlet property="stitchBtn" destination="luc-AT-VNw" id="ucv-kH-cw7"/>
+                        <outlet property="captureBtn" destination="FmD-2g-uiC" id="m65-Mt-hLV"/>
+                        <outlet property="downloadBtn" destination="hUb-u1-Wwn" id="uxO-TD-2v3"/>
+                        <outlet property="fpvPreviewView" destination="uTK-dR-UVx" id="aTB-8b-iHq"/>
+                        <outlet property="stitchBtn" destination="luc-AT-VNw" id="LkS-tX-RFl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -211,7 +209,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="F5E-Vz-n1R" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="7hi-BA-Nps">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="50"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
