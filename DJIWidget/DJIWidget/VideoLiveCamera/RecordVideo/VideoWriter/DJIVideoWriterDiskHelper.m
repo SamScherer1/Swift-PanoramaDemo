@@ -75,8 +75,8 @@
             self.availableSpace = 0;
         }
 #if PRINT_DISK_STATE
-		NSLog(@"freeDiskSpace = %tuM", self.freeDiskSpace / 1024 / 1024);
-		NSLog(@"availableSpace = %tuM", self.availableSpace / 1024 / 1024);
+		NSLog(@"freeDiskSpace = %lluM", self.freeDiskSpace / 1024 / 1024);
+		NSLog(@"availableSpace = %lluM", self.availableSpace / 1024 / 1024);
 #endif
     });
     return totalFreeSpace;

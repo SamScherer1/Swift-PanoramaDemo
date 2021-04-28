@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		236B937ABC1F0E0953105845 /* libPods-PanoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A539CCE715BBF127E6379E2 /* libPods-PanoDemo.a */; };
+		4A57C72C45ACD09771D23046 /* libPods-PanoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */; };
 		A419408D1DCB41970076478C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419408C1DCB41970076478C /* opencv2.framework */; };
 		A46985B021343CA6001A1F08 /* DJIWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46985AF21343C97001A1F08 /* DJIWidget.framework */; };
 		A46985B121343CA6001A1F08 /* DJIWidget.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A46985AF21343C97001A1F08 /* DJIWidget.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -63,8 +63,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0A539CCE715BBF127E6379E2 /* libPods-PanoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PanoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		53AA8D6971E22D6F13EBBABB /* Pods-PanoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-PanoDemo/Pods-PanoDemo.release.xcconfig"; sourceTree = "<group>"; };
+		0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PanoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3E5237D4185BE95C5C9375F0 /* Pods-PanoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.release.xcconfig"; path = "Target Support Files/Pods-PanoDemo/Pods-PanoDemo.release.xcconfig"; sourceTree = "<group>"; };
 		A419408C1DCB41970076478C /* opencv2.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = opencv2.framework; path = PanoDemo/Frameworks/opencv2.framework; sourceTree = "<group>"; };
 		A46985AA21343C96001A1F08 /* DJIWidget.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = DJIWidget.xcodeproj; path = DJIWidget/DJIWidget.xcodeproj; sourceTree = "<group>"; };
 		A46985B421343CAF001A1F08 /* FFmpeg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FFmpeg.framework; path = DJIWidget/FFmpeg/FFmpeg.framework; sourceTree = "<group>"; };
@@ -80,6 +80,7 @@
 		A4FE15821B8EEF1500C58EB3 /* Stitching.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Stitching.mm; sourceTree = "<group>"; };
 		A4FE15831B8EEF1500C58EB3 /* StitchingWrapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StitchingWrapper.cpp; sourceTree = "<group>"; };
 		A4FE15841B8EEF1500C58EB3 /* StitchingWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StitchingWrapper.h; sourceTree = "<group>"; };
+		AC0235A8882B3AC2D59987DC /* Pods-PanoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.debug.xcconfig"; path = "Target Support Files/Pods-PanoDemo/Pods-PanoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		B349F8781B68804900B5FEA6 /* PanoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PanoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B349F87C1B68804900B5FEA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B349F87D1B68804900B5FEA6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -97,7 +98,6 @@
 		B349F9C01B6A11D800B5FEA6 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		B349F9C21B6A121800B5FEA6 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		B349F9C31B6A20B200B5FEA6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		C55C1714ECC8320A43000A43 /* Pods-PanoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PanoDemo/Pods-PanoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,20 +112,20 @@
 				A48F79C51C5F59EF00654B9D /* libiconv.tbd in Frameworks */,
 				B349F9C41B6A20B200B5FEA6 /* CoreGraphics.framework in Frameworks */,
 				B349F9C11B6A11D800B5FEA6 /* AssetsLibrary.framework in Frameworks */,
-				236B937ABC1F0E0953105845 /* libPods-PanoDemo.a in Frameworks */,
+				4A57C72C45ACD09771D23046 /* libPods-PanoDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		34EA4BC2AB689C5868EC60A7 /* Pods */ = {
+		964E0B85BDEE52AD2EE4D939 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C55C1714ECC8320A43000A43 /* Pods-PanoDemo.debug.xcconfig */,
-				53AA8D6971E22D6F13EBBABB /* Pods-PanoDemo.release.xcconfig */,
+				AC0235A8882B3AC2D59987DC /* Pods-PanoDemo.debug.xcconfig */,
+				3E5237D4185BE95C5C9375F0 /* Pods-PanoDemo.release.xcconfig */,
 			);
-			name = Pods;
+			path = Pods;
 			sourceTree = "<group>";
 		};
 		A46985AB21343C96001A1F08 /* Products */ = {
@@ -141,7 +141,7 @@
 			children = (
 				A46985AA21343C96001A1F08 /* DJIWidget.xcodeproj */,
 				A487790B1DCB3EA500E48815 /* opencv2.framework */,
-				0A539CCE715BBF127E6379E2 /* libPods-PanoDemo.a */,
+				0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -169,7 +169,7 @@
 				B349F8941B68804A00B5FEA6 /* PanoDemoTests */,
 				B349F8791B68804900B5FEA6 /* Products */,
 				A487790A1DCB3EA400E48815 /* Frameworks */,
-				34EA4BC2AB689C5868EC60A7 /* Pods */,
+				964E0B85BDEE52AD2EE4D939 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -256,12 +256,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B349F89B1B68804A00B5FEA6 /* Build configuration list for PBXNativeTarget "PanoDemo" */;
 			buildPhases = (
-				9B03DBFA44EE7E5CF89E3C8B /* [CP] Check Pods Manifest.lock */,
+				709B3035DC5FFC65DF6C77BC /* [CP] Check Pods Manifest.lock */,
 				B349F8741B68804900B5FEA6 /* Sources */,
 				B349F8751B68804900B5FEA6 /* Frameworks */,
 				B349F8761B68804900B5FEA6 /* Resources */,
 				A48F79CC1C5F5A3E00654B9D /* Embed Frameworks */,
-				E578A7BF5C045D21C5DDBC52 /* [CP] Embed Pods Frameworks */,
+				D7D63DD37C9D5E6CA9AA9791 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -284,7 +284,7 @@
 				TargetAttributes = {
 					B349F8771B68804900B5FEA6 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = 7UL3LRJL93;
+						DevelopmentTeam = R725LZS4G8;
 					};
 				};
 			};
@@ -337,16 +337,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		9B03DBFA44EE7E5CF89E3C8B /* [CP] Check Pods Manifest.lock */ = {
+		709B3035DC5FFC65DF6C77BC /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			inputFileListPaths = (
 			);
 			inputPaths = (
 				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
 				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"$(DERIVED_FILE_DIR)/Pods-PanoDemo-checkManifestLockResult.txt",
 			);
@@ -355,13 +359,13 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E578A7BF5C045D21C5DDBC52 /* [CP] Embed Pods Frameworks */ = {
+		D7D63DD37C9D5E6CA9AA9791 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-PanoDemo/Pods-PanoDemo-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-PanoDemo/Pods-PanoDemo-frameworks.sh",
 				"${PODS_ROOT}/DJI-SDK-iOS/iOS_Mobile_SDK/DJISDK.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -370,7 +374,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PanoDemo/Pods-PanoDemo-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PanoDemo/Pods-PanoDemo-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -505,10 +509,10 @@
 		};
 		B349F89C1B68804A00B5FEA6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C55C1714ECC8320A43000A43 /* Pods-PanoDemo.debug.xcconfig */;
+			baseConfigurationReference = AC0235A8882B3AC2D59987DC /* Pods-PanoDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7UL3LRJL93;
+				DEVELOPMENT_TEAM = R725LZS4G8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -523,21 +527,22 @@
 					"'$(SRCROOT)/PanoDemo/VideoPreviewer/ffmpeg/include'",
 				);
 				INFOPLIST_FILE = PanoDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.dji.panoDemo1;
+				PRODUCT_BUNDLE_IDENTIFIER = DJISwiftDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_WORKSPACE = YES;
 				VALID_ARCHS = "arm64 arm64e armv7s";
 			};
 			name = Debug;
 		};
 		B349F89D1B68804A00B5FEA6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 53AA8D6971E22D6F13EBBABB /* Pods-PanoDemo.release.xcconfig */;
+			baseConfigurationReference = 3E5237D4185BE95C5C9375F0 /* Pods-PanoDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = 7UL3LRJL93;
+				DEVELOPMENT_TEAM = R725LZS4G8;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -552,11 +557,12 @@
 					"'$(SRCROOT)/PanoDemo/VideoPreviewer/ffmpeg/include'",
 				);
 				INFOPLIST_FILE = PanoDemo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = com.dji.panoDemo1;
+				PRODUCT_BUNDLE_IDENTIFIER = DJISwiftDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALIDATE_WORKSPACE = YES;
 				VALID_ARCHS = "arm64 arm64e armv7s";
 			};
 			name = Release;

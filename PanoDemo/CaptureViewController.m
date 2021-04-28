@@ -14,7 +14,7 @@
 #define ROTATE_ANGLE 45
 #define kCaptureModeAlertTag 100
 
-#define ENTER_DEBUG_MODE 0
+#define ENTER_DEBUG_MODE 1
 
 #define weakSelf(__TARGET__) __weak typeof(self) __TARGET__=self
 #define weakReturn(__TARGET__) if(__TARGET__==nil)return;
@@ -94,7 +94,7 @@
         NSLog(@"registerAppSuccess");
         
 #if ENTER_DEBUG_MODE
-        [DJISDKManager enableBridgeModeWithBridgeAppIP:@"10.81.0.208"];
+        [DJISDKManager enableBridgeModeWithBridgeAppIP:@"192.168.128.169"];
 #else
         [DJISDKManager startConnectionToProduct];
 #endif
@@ -345,11 +345,17 @@
         }
         yawRotation = @(yawAngle);
         
+//        DJIGimbalRotation *rotation = [DJIGimbalRotation gimbalRotationWithPitchValue:pitchRotation
+//                                                                            rollValue:rollRotation
+//                                                                             yawValue:yawRotation
+//                                                                                 time:1
+//                                                                                 mode:DJIGimbalRotationModeAbsoluteAngle];
         DJIGimbalRotation *rotation = [DJIGimbalRotation gimbalRotationWithPitchValue:pitchRotation
                                                                             rollValue:rollRotation
                                                                              yawValue:yawRotation
                                                                                  time:1
-                                                                                 mode:DJIGimbalRotationModeAbsoluteAngle];
+                                                                                 mode:DJIGimbalRotationModeAbsoluteAngle
+                                                                               ignore:NO];//TODOIgnore?
         
         [gimbal rotateWithRotation:rotation completion:^(NSError * _Nullable error) {
         }];
