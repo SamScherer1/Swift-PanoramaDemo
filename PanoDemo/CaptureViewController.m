@@ -43,9 +43,35 @@
     
     self.title = @"Panorama Demo";
     self.aircraftLocation = kCLLocationCoordinate2DInvalid;
-    [[DJIVideoPreviewer instance] setView:self.fpvPreviewView];
+    
     [self registerApp];
 
+    UIButton *testBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.view addSubview:testBtn];
+    testBtn.translatesAutoresizingMaskIntoConstraints = NO;
+    [testBtn.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
+    [testBtn.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor].active = YES;
+    [testBtn.widthAnchor constraintEqualToConstant:50.0].active = YES;
+    [testBtn.heightAnchor constraintEqualToConstant:50.0].active = YES;
+    testBtn.titleLabel.textColor = UIColor.blackColor;
+    testBtn.backgroundColor = UIColor.grayColor;
+    [testBtn setEnabled:YES];
+    [testBtn setTitle:@"test" forState:UIControlStateNormal];
+    //[testBtn actionsForTarget:self forControlEvent:UIControlEventTouchUpInside];
+    [testBtn addTarget:self action:@selector(testBtnAction) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)testBtnAction {
+    DJICamera *camera = [self fetchCamera];
+    [camera getModeWithCompletion:^(DJICameraMode mode, NSError * _Nullable error) {
+        if (!error) {
+            if (mode == DJICameraModeShootPhoto) {
+                [camera setMode:DJICameraModeRecordVideo withCompletion:nil];
+            } else {
+                [camera setMode:DJICameraModeShootPhoto withCompletion:nil];
+            }
+        }
+    }];
 }
 
 - (void) registerApp {
@@ -83,6 +109,9 @@
         }
     }];
     
+    [[DJIVideoPreviewer instance] setView:self.fpvPreviewView];
+    [[DJISDKManager videoFeeder].primaryVideoFeed addListener:self withQueue:nil];
+    [[DJIVideoPreviewer instance] start];
 }
 
 - (void)appRegisteredWithError:(NSError *)error {
@@ -213,7 +242,7 @@
     }];
 }
 
--(void)enableVirtualStick {
+- (void)enableVirtualStick {
     DJIFlightController *flightController = [self fetchFlightController];
     [flightController setYawControlMode:DJIVirtualStickYawControlModeAngle];
     [flightController setRollPitchCoordinateSystem:DJIVirtualStickFlightCoordinateSystemGround];
@@ -227,12 +256,11 @@
     }];
 }
 
-- (void)executeVirtualStickControl
-{
+- (void)executeVirtualStickControl {
     __weak DJICamera *camera = [self fetchCamera];
 
     for(int i = 0;i < PHOTO_NUMBER; i++){
-
+        
         float yawAngle = ROTATE_ANGLE*i;
 
         if (yawAngle > 180.0) { //Filter the angle between -180 ~ 0, 0 ~ 180
@@ -247,8 +275,14 @@
         
         [timer invalidate];
         timer = nil;
-        
-        [camera startShootPhotoWithCompletion:nil];
+        NSLog(@"SS Shooting photo number %i", i);
+        [camera startShootPhotoWithCompletion:^(NSError *error) {
+            if (error) {
+                NSLog(@"SS Failed to shoot photo: %@", error.description);
+            } else {
+                NSLog(@"SS Shot Photo!");
+            }
+        }];
         
         sleep(2);
     }
