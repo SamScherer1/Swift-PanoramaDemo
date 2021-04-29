@@ -33,7 +33,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     //@property (strong, nonatomic) UIAlertView* downloadProgressAlert;
     var downloadProgressAlert : UIAlertController?
     //@property (strong, nonatomic) UIAlertView* uploadMissionProgressAlert;
-    var uploadMissionProgressAlert : UIAlertController?
+    var uploadMissionProgressAlertController : UIAlertController?
     //@property (strong, nonatomic) NSMutableArray* imageArray;
     var imageArray : [UIImage]?
     //@property (atomic) CLLocationCoordinate2D aircraftLocation;
@@ -472,7 +472,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     }
                 }
             }
-            
             sleep(2)
 
             yawAngle = yawAngle + rotationAngle
@@ -509,130 +508,111 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
 
     func shootPanoWaypointMission() {
-//    if (CLLocationCoordinate2DIsValid(self.aircraftLocation) && self.gpsSignalLevel != DJIGPSSignalLevel0 && self.gpsSignalLevel != DJIGPSSignalLevel1) {
-//        [self uploadWaypointMission];
-//    }
-//    else {
-//        [self showAlertViewWithTitle:@"GPS signal weak" withMessage:@"Rotate drone failed"];
-//    }
+        guard let aircraftLocation = self.aircraftLocation else { return }
+        if (CLLocationCoordinate2DIsValid(aircraftLocation)) && (self.gpsSignalLevel != DJIGPSSignalLevel.level0) && (self.gpsSignalLevel != DJIGPSSignalLevel.level1) {
+            self.uploadWaypointMission()
+        } else {
+            self.showAlertWith(title: "GPS signal weak", message: "Rotate drone failed")
+        }
     }
-//
-//- (void) initializeMission {
-//    DJIMutableWaypointMission *mission = [[DJIMutableWaypointMission alloc] init];
-//    mission.maxFlightSpeed = 15.0;
-//    mission.autoFlightSpeed = 4.0;
-//
-//    DJIWaypoint *wp1 = [[DJIWaypoint alloc] initWithCoordinate:self.aircraftLocation];
-//    wp1.altitude = self.aircraftAltitude;
-//
-//    for (int i = 0; i < PHOTO_NUMBER ; i++) {
-//
-//        double rotateAngle = ROTATE_ANGLE*i;
-//
-//        if (rotateAngle > 180) { //Filter the angle between -180 ~ 0, 0 ~ 180
-//            rotateAngle = rotateAngle - 360;
-//        }
-//
-//        DJIWaypointAction *action1 = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionTypeShootPhoto param:0];
-//        DJIWaypointAction *action2 = [[DJIWaypointAction alloc] initWithActionType:DJIWaypointActionTypeRotateAircraft param:rotateAngle];
-//        [wp1 addAction:action1];
-//        [wp1 addAction:action2];
-//    }
-//
-//    DJIWaypoint *wp2 = [[DJIWaypoint alloc] initWithCoordinate:self.aircraftLocation];
-//    wp2.altitude = self.aircraftAltitude + 1;
-//
-//    [mission addWaypoint:wp1];
-//    [mission addWaypoint:wp2];
-//    [mission setFinishedAction:DJIWaypointMissionFinishedNoAction]; //Change the default action of Go Home to None
-//
-//    [[self missionOperator] loadMission:mission];
-//
-//    weakSelf(target);
-//
-//    [[self missionOperator] addListenerToUploadEvent:self withQueue:dispatch_get_main_queue() andBlock:^(DJIWaypointMissionUploadEvent * _Nonnull event) {
-//
-//        weakReturn(target);
-//        if (event.currentState == DJIWaypointMissionStateUploading) {
-//
-//            NSString *message = [NSString stringWithFormat:@"Uploaded Waypoint Index: %ld, Total Waypoints: %ld" ,event.progress.uploadedWaypointIndex + 1, event.progress.totalWaypointCount];
-//
-//            if (target.uploadMissionProgressAlert == nil) {
-//                target.uploadMissionProgressAlert = [[UIAlertView alloc] initWithTitle:nil message:message delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-//                [target.uploadMissionProgressAlert show];
-//            }
-//            else {
-//                [target.uploadMissionProgressAlert setMessage:message];
-//            }
-//
-//        }else if (event.currentState == DJIWaypointMissionStateReadyToExecute){
-//
-//            [target.uploadMissionProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//            target.uploadMissionProgressAlert = nil;
-//
-//            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Upload Mission Finished" message:nil preferredStyle:UIAlertControllerStyleAlert];
-//            UIAlertAction *startMissionAction = [UIAlertAction actionWithTitle:@"Start Mission" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-//                [target startWaypointMission];
-//            }];
-//            UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler:nil];
-//            [alert addAction:cancelAction];
-//            [alert addAction:startMissionAction];
-//            [target presentViewController:alert animated:YES completion:nil];
-//
-//        }
-//
-//    }];
-//
-//    [[self missionOperator] addListenerToFinished:self withQueue:dispatch_get_main_queue() andBlock:^(NSError * _Nullable error) {
-//
-//        weakReturn(target);
-//
-//        if (error) {
-//            [target showAlertViewWithTitle:@"Mission Execution Failed" withMessage:[NSString stringWithFormat:@"%@", error.description]];
-//        }
-//        else {
-//            [target showAlertViewWithTitle:@"Mission Execution Finished" withMessage:nil];
-//        }
-//    }];
-//
-//}
-//
-//- (void)uploadWaypointMission {
-//
-//    [self initializeMission];
-//
-//    weakSelf(target);
-//
-//    [[self missionOperator] uploadMissionWithCompletion:^(NSError * _Nullable error) {
-//
-//        weakReturn(target);
-//
-//        if (error) {
-//            NSLog(@"%@", [NSString stringWithFormat:@"Upload Mission Failed: %@", [NSString stringWithFormat:@"%@", error.description]]);
-//        }else
-//        {
-//            NSLog(@"Upload Mission Finished");
-//        }
-//    }];
-//}
-//
-//- (void)startWaypointMission {
-//    weakSelf(target);
-//    //Start Mission
-//    [[self missionOperator] startMissionWithCompletion:^(NSError * _Nullable error) {
-//
-//        weakReturn(target);
-//
-//        if (error) {
-//            [target showAlertViewWithTitle:@"Start Mission Failed" withMessage:[NSString stringWithFormat:@"%@", error.description]];
-//        }
-//        else {
-//            [target showAlertViewWithTitle:@"Start Mission Success" withMessage:nil];
-//        }
-//
-//    }];
-//}
-//
+    
+    func initializeMission() {
+        let mission = DJIMutableWaypointMission()
+        mission.maxFlightSpeed = 15.0
+        mission.autoFlightSpeed = 4.0
+        
+        guard let aircraftLocation = self.aircraftLocation else { return }
+        let waypoint1 = DJIWaypoint(coordinate: aircraftLocation)
+        waypoint1.altitude = Float(self.aircraftAltitude)
+
+        for photoNumber in 0..<numberOfPhotos {
+            var rotateAngle = Int16(photoNumber) * Int16(rotationAngle)
+            if rotateAngle > 180 {
+                rotateAngle = rotateAngle - 360
+            }
+            
+            let shootPhotoAction = DJIWaypointAction(actionType: DJIWaypointActionType.shootPhoto, param: 0)
+            let rotateAction = DJIWaypointAction(actionType: DJIWaypointActionType.rotateAircraft, param: rotateAngle)
+            waypoint1.add(shootPhotoAction)
+            waypoint1.add(rotateAction)
+            
+        }
+        
+        let waypoint2 = DJIWaypoint(coordinate: aircraftLocation)
+        waypoint2.altitude = Float(self.aircraftAltitude + 1.0)
+        mission.add(waypoint1)
+        mission.add(waypoint2)
+        
+        //Change the default action of Go Home to None
+        mission.finishedAction = DJIWaypointMissionFinishedAction.noAction
+
+        self.missionOperator()?.load(mission)
+        
+        self.missionOperator()?.addListener(toUploadEvent: self, with: DispatchQueue.main, andBlock: { [weak self] (event:DJIWaypointMissionUploadEvent) in
+            if event.currentState == DJIWaypointMissionState.uploading {
+                //NSString *message = [NSString stringWithFormat:@"Uploaded Waypoint Index: %ld, Total Waypoints: %ld" ,event.progress.uploadedWaypointIndex + 1, event.progress.totalWaypointCount];
+                guard let progress = event.progress else { return }
+                let message = "Uploaded Waypoint Index: \(progress.uploadedWaypointIndex + 1), Total Waypoints: \(progress.totalWaypointCount)"
+                
+                //TODO: still not sure about this unwrapping pattern...
+                if let _ = self?.uploadMissionProgressAlertController {
+                    self?.uploadMissionProgressAlertController?.message = message
+                } else {
+                    let uploadMissionProgressAC = UIAlertController(title: nil, message: message, preferredStyle: UIAlertController.Style.alert)
+                    self?.uploadMissionProgressAlertController = uploadMissionProgressAC
+                    self?.present(uploadMissionProgressAC, animated: true, completion: nil)
+                }
+            } else if event.currentState == DJIWaypointMissionState.readyToExecute {
+                self?.uploadMissionProgressAlertController?.dismiss(animated: true, completion: nil)
+                self?.uploadMissionProgressAlertController = nil
+                
+                let finishedAlertController = UIAlertController(title: "Upload Mission Finished",
+                                                                message: nil,
+                                                                preferredStyle: UIAlertController.Style.alert)
+                let startMissionAction = UIAlertAction(title: "Start Mission", style: UIAlertAction.Style.default) { [weak self] (_) in
+                    self?.startWaypointMission()
+                }
+                
+                let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.default, handler: nil)
+                finishedAlertController.addAction(startMissionAction)
+                finishedAlertController.addAction(cancelAction)
+                self?.present(finishedAlertController, animated: true, completion: nil)
+            }
+        })
+        
+        self.missionOperator()?.addListener(toFinished: self, with: DispatchQueue.main, andBlock: { [weak self] (error:Error?) in
+            if let error = error {
+                self?.showAlertWith(title: "Mission Execution Failed", message: error.localizedDescription)
+            } else {
+                self?.showAlertWith(title: "Mission Execution Finished", message: "")
+
+            }
+        })
+    }
+
+    func uploadWaypointMission() {
+        self.initializeMission()
+        
+        self.missionOperator()?.uploadMission(completion: { (error:Error?) in
+            if let error = error {
+                print("Upload Mission Failed: \(error.localizedDescription)")
+            } else {
+                print("Upload Mission Finished")
+            }
+        })
+    }
+    
+    func startWaypointMission() {
+        self.missionOperator()?.startMission(completion: { (error:Error?) in
+            if let error = error {
+                self.showAlertWith(title: "Start Mission Failed", message: error.localizedDescription)
+            } else {
+                //[target showAlertViewWithTitle:@"Start Mission Success" withMessage:nil];
+                self.showAlertWith(title: "Start Mission Success", message: "")
+            }
+        })
+    }
+
 //MARK: - Select the lastest photos for Panorama
 //
 //-(void)selectPhotosForPlaybackMode {
@@ -876,19 +856,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         //        }];
         //    }
     }
-
-//MARK: UIAlertView Delegate Methods
-//- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-//    if (alertView.tag == kCaptureModeAlertTag) {
-//        if(buttonIndex == 1){
-//            [self shootPanoRotateAircraft];
-//        }else if(buttonIndex == 2){
-//            [self shootPanoRotateGimbal];
-//        }else if (buttonIndex == 3){
-//            [self shootPanoWaypointMission];
-//        }
-//    }
-//}
     
     //TODO: unused?
     func didUpdateDatabaseDownloadProgress(_ progress: Progress) {
