@@ -274,6 +274,22 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         //            }
         //        }
         //    }];
+        print("called setCameraModeToShootPhoto")
+        let camera = self.fetchCamera()
+        camera?.getModeWithCompletion({ [weak self] (mode:DJICameraMode, error:Error?) in
+            if error == nil {
+                if mode == DJICameraMode.shootPhoto {
+                    self?.enableVirtualStick()
+                } else {
+                    //TODO: is [weak self] necessay in the second closure?
+                    camera?.setMode(DJICameraMode.shootPhoto, withCompletion: { [weak self] (error:Error?) in
+                        if error == nil {
+                            self?.enableVirtualStick()
+                        }
+                    })
+                }
+            }
+        })
     }
     
     func enableVirtualStick() {//TODO: rename something appropriate
@@ -288,11 +304,24 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         //            [self executeVirtualStickControl];
         //        });
         //    }];
+        print("called enableVirtualStick")
+        if let flightController = self.fetchFlightController() {
+            flightController.yawControlMode = DJIVirtualStickYawControlMode.angle
+            flightController.rollPitchCoordinateSystem = DJIVirtualStickFlightCoordinateSystem.ground
+            flightController.setVirtualStickModeEnabled(true) { [weak self] (error:Error?) in
+                if let error = error {
+                    print("Enable VirtualStickControlMode Failed with error: \(error.localizedDescription)")
+                } else {
+                    DispatchQueue.main.async { [weak self] () in //Again, need to call weak self from closure inside closure?
+                        self?.executeVirtualStickControl()
+                    }
+                }
+            }
+        }
     }
     
-//
-//- (void)executeVirtualStickControl {
     func executeVirtualStickControl() {
+        print("called executeVirtualStickControl")
 //    __weak DJICamera *camera = [self fetchCamera];
         let camera = self.fetchCamera()
         
@@ -359,24 +388,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
 
     @objc func rotateDrone(timer:Timer) {
-        //    NSDictionary *dict = [timer userInfo];
-        //    float yawAngle = [[dict objectForKey:@"YawAngle"] floatValue];
-        //
-        //    DJIFlightController *flightController = [self fetchFlightController];
-        //
-        //    DJIVirtualStickFlightControlData vsFlightCtrlData;
-        //    vsFlightCtrlData.pitch = 0;
-        //    vsFlightCtrlData.roll = 0;
-        //    vsFlightCtrlData.verticalThrottle = 0;
-        //    vsFlightCtrlData.yaw = yawAngle;
-        //
-        //    flightController.isVirtualStickAdvancedModeEnabled = YES;
-        //
-        //    [flightController sendVirtualStickFlightControlData:vsFlightCtrlData withCompletion:^(NSError * _Nullable error) {
-        //        if (error) {
-        //            NSLog(@"Send FlightControl Data Failed %@", error.description);
-        //        }
-        //    }];
         guard let timerUserInfoDictionary = timer.userInfo as? [String:Float] else { return }
         guard let yawAngle = timerUserInfoDictionary["YawAngle"] else { return }
         let flightController = self.fetchFlightController()
@@ -405,27 +416,39 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         //            });
         //        }
         //    }];
+        guard let camera = self.fetchCamera() else {
+            print("fetchCamera returned nil")
+            return
+        }
+        camera.setMode(DJICameraMode.shootPhoto) { [weak self] (error:Error?) in
+            if error == nil {
+                DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async {
+                    self?.executeRotateGimbal()
+                }
+            }
+        }
     }
-//
-//- (void)executeRotateGimbal {
+    
     func executeRotateGimbal() {
 //    DJIGimbal *gimbal = [self fetchGimbal];
 //    __weak DJICamera *camera = [self fetchCamera];
-//
-//    //Reset Gimbal at the beginning
-//    [gimbal resetWithCompletion:^(NSError * _Nullable error) {
-//        if (error) {
-//            NSLog(@"ResetGimbal Failed: %@", [NSString stringWithFormat:@"%@", error.description]);
-//        }
-//    }];
-//    sleep(3);
-//
-//    //rotate the gimbal clockwise
-//    float yawAngle = 0;
+        guard let gimbal = self.fetchGimbal() else {return}
+        guard let camera = self.fetchCamera() else {return}
+        
+        //Reset Gimbal at the beginning
+        gimbal.reset { (error:Error?) in
+            if let error = error {
+                print("ResetGimbal Failed: \(error.localizedDescription)")
+            }
+        }
+        sleep(3)
+        
+        //rotate the gimbal clockwise
+        var yawAngle = 0.0
 //
 //    for(int i = 0; i < PHOTO_NUMBER; i++){
-//
-//        NSLog(@"SS Start Shoot Photo: %i", i);
+        for photoNumber in 0 ..< numberOfPhotos {
+            print("SS Start Shoot Photo \(photoNumber)")
 //        [camera setShootPhotoMode:DJICameraShootPhotoModeSingle withCompletion:^(NSError * _Nullable error) {
 //            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //                [camera startShootPhotoWithCompletion:^(NSError * _Nullable error) {
@@ -437,40 +460,47 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
 //                }];
 //            });
 //        }];
-//
-//        sleep(2);
-//
-//        NSNumber *pitchRotation = @(0);
-//        NSNumber *rollRotation = @(0);
-//        NSNumber *yawRotation = @(yawAngle);
-//
-//        yawAngle += ROTATE_ANGLE;
-//        if (yawAngle > 180.0) { //Filter the angle between -180 ~ 0, 0 ~ 180
-//            yawAngle = yawAngle - 360;
-//        }
-//        yawRotation = @(yawAngle);
-//
-//        DJIGimbalRotation *rotation = [DJIGimbalRotation gimbalRotationWithPitchValue:pitchRotation
-//                                                                            rollValue:rollRotation
-//                                                                             yawValue:yawRotation
-//                                                                                 time:1
-//                                                                                 mode:DJIGimbalRotationModeAbsoluteAngle
-//                                                                               ignore:NO];//TODO: Ignore? doesn't seem to affect the gimbal rotations...
-//
-//        [gimbal rotateWithRotation:rotation completion:^(NSError * _Nullable error) {
-//            if (error) {
-//                NSLog(@"SS Rotation Error: %@", error.description);
-//            }
-//        }];
-//
-//        sleep(2);
-//    }
-//
-//    weakSelf(target);
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        weakReturn(target);
-//        [target showAlertViewWithTitle:@"Capture Photos" withMessage:@"Capture finished"];
-//    });
+            
+            camera.setShootPhotoMode(DJICameraShootPhotoMode.single) { (error:Error?) in
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
+                    camera.startShootPhoto { (error:Error?) in
+                        if let error = error {
+                            print("SS ShootPhotoError: \(error.localizedDescription)")
+                        } else {
+                            print("SS Successfully Shot Photo")
+                        }
+                    }
+                }
+            }
+            
+            sleep(2)
+
+            yawAngle = yawAngle + rotationAngle
+            if yawAngle > 180.0 {
+                yawAngle = yawAngle - 360.0
+            }
+            
+            let yawRotation = NSNumber(value:yawAngle)
+            
+            let rotation = DJIGimbalRotation(pitchValue: 0,
+                                             rollValue: 0,
+                                             yawValue: yawRotation,
+                                             time: 1,
+                                             mode: DJIGimbalRotationMode.absoluteAngle,
+                                             ignore: false)
+            
+            gimbal.rotate(with: rotation) { (error:Error?) in
+                if let error = error {
+                    print("SS Rotation Error: \(error.localizedDescription)")
+                }
+            }
+            
+            sleep(2)
+        }
+
+        DispatchQueue.main.async { [weak self] () in
+            self?.showAlertWith(title: "Capture Photos", message: "Capture finished")
+        }
     }
     
 //MARK: - Rotate Drone With Waypoint Mission Methods

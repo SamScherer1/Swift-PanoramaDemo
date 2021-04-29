@@ -94,7 +94,6 @@
 		B349F88B1B68804900B5FEA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B349F8961B68804A00B5FEA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B349F8971B68804A00B5FEA6 /* PanoDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PanoDemoTests.m; sourceTree = "<group>"; };
-		B349F8A41B68816600B5FEA6 /* CaptureViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CaptureViewController.h; sourceTree = "<group>"; };
 		B349F8A51B68816600B5FEA6 /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
 		B349F9BA1B69F96700B5FEA6 /* StitchingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StitchingViewController.h; sourceTree = "<group>"; };
 		B349F9BB1B69F96700B5FEA6 /* StitchingViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StitchingViewController.mm; sourceTree = "<group>"; };
@@ -244,7 +243,6 @@
 		B349F9F41B6B0D0B00B5FEA6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B349F8A41B68816600B5FEA6 /* CaptureViewController.h */,
 				B349F8A51B68816600B5FEA6 /* CaptureViewController.m */,
 				3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */,
 				B349F9BA1B69F96700B5FEA6 /* StitchingViewController.h */,
