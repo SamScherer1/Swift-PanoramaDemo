@@ -11,15 +11,20 @@ import UIKit
 import DJISDK
 import DJIWidget
 
+let kNumberOfPhotosInPanorama = 8
+let kRotationAngle = 45.0
+let kUseBridge = true
+let kBridgeIP = "192.168.128.169"
+
 class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIVideoFeedListener {
     
     //#define PHOTO_NUMBER 8
-    let numberOfPhotos = 8
-    //#define ROTATE_ANGLE 45
-    let rotationAngle = 45.0
-    
-    let useBridge = true
-    let bridgeIP = "192.168.128.169"
+//    let numberOfPhotos = 8
+//    //#define ROTATE_ANGLE 45
+//    let rotationAngle = 45.0
+//
+//    let useBridge = true
+//    let bridgeIP = "192.168.128.169"
     
     //#define kCaptureModeAlertTag 100
     
@@ -29,7 +34,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     @IBOutlet weak var stitchBtn: UIButton!
     
     //@property (nonatomic, assign) __block int numberSelectedPhotos;
-    var numberSelectedPhotos : Int?
+    var numberSelectedPhotos = 0
     //@property (strong, nonatomic) UIAlertView* downloadProgressAlert;
     var downloadProgressAlert : UIAlertController?
     //@property (strong, nonatomic) UIAlertView* uploadMissionProgressAlert;
@@ -169,8 +174,8 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         if let error = error {
             message = String(format: "Register App Failed! Please enter your App Key and check the network. Error: %@", error.localizedDescription)
         } else {
-            if useBridge {
-                DJISDKManager.enableBridgeMode(withBridgeAppIP: bridgeIP)
+            if kUseBridge {
+                DJISDKManager.enableBridgeMode(withBridgeAppIP: kBridgeIP)
             } else {
                 DJISDKManager.startConnectionToProduct()
             }
@@ -326,9 +331,9 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         let camera = self.fetchCamera()
         
 //    for(int i = 0;i < PHOTO_NUMBER; i++){
-        for photoNumber in 0 ..< numberOfPhotos {
+        for photoNumber in 0 ..< kNumberOfPhotosInPanorama {
             //Filter the angle between -180 ~ 0, 0 ~ 180
-            var yawAngle = rotationAngle * Double(photoNumber)
+            var yawAngle = kRotationAngle * Double(photoNumber)
             if yawAngle > 180.0 {
                 yawAngle = yawAngle - 360.0
             }
@@ -447,7 +452,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         var yawAngle = 0.0
 //
 //    for(int i = 0; i < PHOTO_NUMBER; i++){
-        for photoNumber in 0 ..< numberOfPhotos {
+        for photoNumber in 0 ..< kNumberOfPhotosInPanorama {
             print("SS Start Shoot Photo \(photoNumber)")
 //        [camera setShootPhotoMode:DJICameraShootPhotoModeSingle withCompletion:^(NSError * _Nullable error) {
 //            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -474,7 +479,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             }
             sleep(2)
 
-            yawAngle = yawAngle + rotationAngle
+            yawAngle = yawAngle + kRotationAngle
             if yawAngle > 180.0 {
                 yawAngle = yawAngle - 360.0
             }
@@ -525,8 +530,8 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         let waypoint1 = DJIWaypoint(coordinate: aircraftLocation)
         waypoint1.altitude = Float(self.aircraftAltitude)
 
-        for photoNumber in 0..<numberOfPhotos {
-            var rotateAngle = Int16(photoNumber) * Int16(rotationAngle)
+        for photoNumber in 0..<kNumberOfPhotosInPanorama {
+            var rotateAngle = Int16(photoNumber) * Int16(kRotationAngle)
             if rotateAngle > 180 {
                 rotateAngle = rotateAngle - 360
             }
@@ -616,151 +621,149 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
 //MARK: - Select the lastest photos for Panorama
 //
 //-(void)selectPhotosForPlaybackMode {
-//    weakSelf(target);
+    func selectPhotosForPlaybackMode() {
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//
-//        weakReturn(target);
-//        DJICamera *camera = [target fetchCamera];
-//        [camera.playbackManager enterMultiplePreviewMode];
-//        sleep(1);
-//        [camera.playbackManager enterMultipleEditMode];
-//        sleep(1);
-//
-//        while (target.numberSelectedPhotos != PHOTO_NUMBER) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async { [weak self] in
+            print("in closure")
+            let camera = self?.fetchCamera()
+            camera?.playbackManager?.enterMultiplePreviewMode()
+            sleep(1)
+            camera?.playbackManager?.enterMultipleEditMode()
+            sleep(1)
+            
+            guard let self = self else { return }
+            while self.numberSelectedPhotos != kNumberOfPhotosInPanorama {
 //            [camera.playbackManager selectAllFilesInPage];
+                camera?.playbackManager?.selectAllFilesInPage()
 //            sleep(1);
-//
-//            if(target.numberSelectedPhotos > PHOTO_NUMBER){
-//                for(int unselectFileIndex = 0; target.numberSelectedPhotos != PHOTO_NUMBER; unselectFileIndex++){
-//                    [camera.playbackManager toggleFileSelectionAtIndex:unselectFileIndex];
-//                    sleep(1);
-//                }
-//                break;
-//            }
-//            else if(target.numberSelectedPhotos < PHOTO_NUMBER) {
-//                [camera.playbackManager goToPreviousMultiplePreviewPage];
-//                sleep(1);
-//            }
-//        }
-//        [target downloadPhotosForPlaybackMode];
-//    });
-//}
-//
+                sleep(1)
+                
+                if self.numberSelectedPhotos > kNumberOfPhotosInPanorama {
+                    for unselectFileIndex in 0 ..< kNumberOfPhotosInPanorama {
+                        camera?.playbackManager?.toggleFileSelection(at: Int32(unselectFileIndex))
+                        sleep(1)
+                    }
+                    break
+                } else if self.numberSelectedPhotos < kNumberOfPhotosInPanorama {
+                    camera?.playbackManager?.goToPreviousMultiplePreviewPage()
+                    sleep(1)
+                }
+             }
+            //[target downloadPhotosForPlaybackMode];
+            self.downloadPhotosForPlaybackMode()
+        }
+    }
+    
 //MARK: - Download the selected photos
-//-(void)downloadPhotosForPlaybackMode {
-//    __block int finishedFileCount = 0;
-//    __block NSMutableData* downloadedFileData;
-//    __block long totalFileSize;
-//    __block NSString* targetFileName;
-//
-//    self.imageArray=[NSMutableArray new];
-//
-//    DJICamera *camera = [self fetchCamera];
-//    if (camera == nil) return;
-//
-//    weakSelf(target);
-//    [camera.playbackManager downloadSelectedFilesWithPreparation:^(NSString * _Nullable fileName, DJIDownloadFileType fileType, NSUInteger fileSize, BOOL * _Nonnull skip) {
-//
-//        totalFileSize=(long)fileSize;
-//        downloadedFileData=[NSMutableData new];
-//        targetFileName=fileName;
-//
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            weakReturn(target);
-//            [target showDownloadProgressAlert];
-//            [target.downloadProgressAlert setTitle:[NSString stringWithFormat:@"Download (%d/%d)", finishedFileCount + 1, PHOTO_NUMBER]];
-//            [target.downloadProgressAlert setMessage:[NSString stringWithFormat:@"FileName:%@ FileSize:%0.1fKB Downloaded:0.0KB", fileName, fileSize / 1024.0]];
-//        });
-//
-//    } process:^(NSData * _Nullable data, NSError * _Nullable error) {
-//
-//        weakReturn(target);
-//        [downloadedFileData appendData:data];
-//
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [target.downloadProgressAlert setMessage:[NSString stringWithFormat:@"FileName:%@ FileSize:%0.1fKB Downloaded:%0.1fKB", targetFileName, totalFileSize / 1024.0, downloadedFileData.length / 1024.0]];
-//        });
-//
-//    } fileCompletion:^{
-//        weakReturn(target);
-//        finishedFileCount++;
-//
-//        UIImage *downloadPhoto=[UIImage imageWithData:downloadedFileData];
-//        [target.imageArray addObject:downloadPhoto];
-//
-//    } overallCompletion:^(NSError * _Nullable error) {
-//
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [target.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//            target.downloadProgressAlert = nil;
-//
-//            if (error) {
-//                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download failed" message:[NSString stringWithFormat:@"%@", error.description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                [alertView show];
-//            }else
-//            {
-//                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Download (%d/%d)", finishedFileCount, PHOTO_NUMBER] message:@"download finished" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                [alertView show];
-//            }
-//
-//            DJICamera *camera = [target fetchCamera];
-//            [camera setMode:DJICameraModeShootPhoto withCompletion:^(NSError * _Nullable error) {
-//                if (error) {
-//                    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Set CameraMode to ShootPhoto Failed" message:[NSString stringWithFormat:@"%@", error.description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                    [alertView show];
-//
-//                }
-//            }];
-//
-//        });
-//
-//    }];
-//}
-//
-//-(void)loadMediaListsForMediaDownloadMode {
-//    DJICamera *camera = [self fetchCamera];
-//    [self showDownloadProgressAlert];
-//    [self.downloadProgressAlert setTitle:[NSString stringWithFormat:@"Refreshing file list. "]];
-//    [self.downloadProgressAlert setMessage:[NSString stringWithFormat:@"Loading..."]];
-//
-//    weakSelf(target);
-//    [camera.mediaManager refreshFileListOfStorageLocation:DJICameraStorageLocationSDCard withCompletion:^(NSError * _Nullable error) {
-//        weakReturn(target);
-//        if (error) {
-//            [target.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//            target.downloadProgressAlert = nil;
-//            NSLog(@"Refresh file list failed: %@", error.description);
-//        }
-//        else {
-//            [target downloadPhotosForMediaDownloadMode];
-//        }
-//    }];
-//}
-//
-//-(void)downloadPhotosForMediaDownloadMode {
-//    __block int finishedFileCount = 0;
-//
-//    self.imageArray=[NSMutableArray new];
-//
-//    DJICamera *camera = [self fetchCamera];
-//    NSArray<DJIMediaFile *> *files = [camera.mediaManager sdCardFileListSnapshot];
-//    if (files.count < PHOTO_NUMBER) {
-//        [self.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//        self.downloadProgressAlert = nil;
-//        UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download failed" message:[NSString stringWithFormat:@"Not enough photos are taken. "] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//        [alertView show];
-//        return;
-//    }
-//
-//    [camera.mediaManager.taskScheduler resumeWithCompletion:^(NSError * _Nullable error) {
-//        if (error) {
-//            [self.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//            self.downloadProgressAlert = nil;
-//            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download failed" message:[NSString stringWithFormat:@"Resume file task scheduler failed. "] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//            [alertView show];
-//        }
-//    }];
-//
+    func downloadPhotosForPlaybackMode() {
+        var finishedFileCount = 0
+        var downloadedFileData = Data()
+        var totalFileSize = 0
+        var targetFileName : String?
+
+        self.imageArray = [UIImage]()
+
+        guard let camera = self.fetchCamera() else {return}
+
+        camera.playbackManager?.downloadSelectedFiles(preparation: { [weak self] (fileName:String?, fileType:DJIDownloadFileType, fileSize:UInt, skip:UnsafeMutablePointer<ObjCBool>) in
+            totalFileSize = Int(fileSize)
+            downloadedFileData = Data()
+            targetFileName = fileName
+            DispatchQueue.main.async { [weak self] () in
+                self?.showDownloadProgressAlert()
+                self?.downloadProgressAlert?.title = "Download (\(finishedFileCount + 1)/\(kNumberOfPhotosInPanorama)"
+                self?.downloadProgressAlert?.message = String(format:"FileName:%@ FileSize:%0.1KB Downloaded:0.0KB", fileName ?? "", Float(fileSize) / 1024.0)
+            }
+        }, process: { (data:Data?, error:Error?) in
+            if let data = data {
+                downloadedFileData.append(data)
+            }
+            DispatchQueue.main.async {
+                let fileName = targetFileName ?? ""
+                let fileSize = Float(totalFileSize) / 1024.0
+                let downloadedSize = Float(downloadedFileData.count) / 1024.0
+                self.downloadProgressAlert?.message = String(format:"FileName:%@ FileSize:%0.1fKB Downloaded:%0.1fKB", fileName, fileSize, downloadedSize)
+            }
+        }, fileCompletion: { [weak self] in
+            finishedFileCount = finishedFileCount + 1
+            if let downloadPhoto = UIImage(data: downloadedFileData) {
+                self?.imageArray?.append(downloadPhoto)
+            }
+        }, overallCompletion: { (error:Error?) in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.downloadProgressAlert?.dismiss(animated: true, completion: nil)
+                self.downloadProgressAlert = nil
+                //TODO: do these 3 alert controllers need an ok button?
+                if let error = error {
+                    let downloadFailController = UIAlertController(title: "Download failed",
+                                                                  message: error.localizedDescription,
+                                                                  preferredStyle: UIAlertController.Style.alert)
+                    self.present(downloadFailController, animated: true, completion: nil)
+                } else {
+                    let downloadFinishController = UIAlertController(title: "Download (\(finishedFileCount)/\(kNumberOfPhotosInPanorama)",
+                                                                     message: "download finished",
+                                                                     preferredStyle: UIAlertController.Style.alert)
+                    self.present(downloadFinishController, animated: true, completion: nil)
+                }
+                
+                let camera = self.fetchCamera()
+                camera?.setMode(DJICameraMode.shootPhoto, withCompletion: { (error:Error?) in
+                    if let error = error {
+                        let cameraModeFailController = UIAlertController(title: "Set CameraMode to ShootPhoto Failed",
+                                                                      message: error.localizedDescription,
+                                                                      preferredStyle: UIAlertController.Style.alert)
+                        self.present(cameraModeFailController, animated: true, completion: nil)
+                    }
+                })
+            }
+            
+        })
+    }
+
+    func loadMediaListsForMediaDownloadMode() {
+        self.showDownloadProgressAlert()
+        self.downloadProgressAlert?.title = "Refreshing file list. "
+        self.downloadProgressAlert?.message = "Loading..."
+        
+        let camera = self.fetchCamera()
+        camera?.mediaManager?.refreshFileList(of: DJICameraStorageLocation.sdCard, withCompletion: { [weak self] (error:Error?) in
+            if let error = error {
+                self?.downloadProgressAlert?.dismiss(animated: true, completion: nil)
+                self?.downloadProgressAlert = nil
+                print("Refresh file list failed: \(error.localizedDescription)")
+            } else {
+                self?.downloadPhotosForMediaDownloadMode()
+            }
+        })
+    }
+
+    func downloadPhotosForMediaDownloadMode() {
+        var finishedFileCount = 0
+
+        self.imageArray = [UIImage]()
+
+        guard let camera = self.fetchCamera() else { return }
+        guard let files = camera.mediaManager?.sdCardFileListSnapshot() else { return }
+        if files.count < kNumberOfPhotosInPanorama {
+            self.downloadProgressAlert?.dismiss(animated: true, completion: nil)
+            self.downloadProgressAlert = nil
+            let downloadFailedController = UIAlertController(title: "Download Failed", message: "Not enough photos are taken. ", preferredStyle: UIAlertController.Style.alert)
+            self.present(downloadFailedController, animated: true, completion: nil)
+            return
+        }
+
+        camera.mediaManager?.taskScheduler.resume(completion: { [weak self] (error:Error?) in
+            if let error = error {
+                self?.downloadProgressAlert?.dismiss(animated: true, completion: nil)
+                self?.downloadProgressAlert = nil
+                let downloadFailedController = UIAlertController(title: "Download failed",
+                                                  message: "Resume file task scheduler failed. ",
+                                                  preferredStyle: UIAlertController.Style.alert)
+                self?.present(downloadFailedController, animated: true, completion: nil)
+            }
+        })
+        
 //    [self.downloadProgressAlert setTitle:[NSString stringWithFormat:@"Downloading..."]];
 //    [self.downloadProgressAlert setMessage:[NSString stringWithFormat:@"Download (%d/%d)", 0, PHOTO_NUMBER]];
 //
@@ -798,14 +801,15 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
 //        }];
 //        [camera.mediaManager.taskScheduler moveTaskToEnd:task];
 //    }
-//}
+}
 //
-//-(void) showDownloadProgressAlert {
-//    if (self.downloadProgressAlert == nil) {
-//        self.downloadProgressAlert = [[UIAlertView alloc] initWithTitle:@"" message:@"" delegate:nil cancelButtonTitle:nil otherButtonTitles:nil];
-//        [self.downloadProgressAlert show];
-//    }
-//}
+    func showDownloadProgressAlert() {
+        if self.downloadProgressAlert == nil {
+            let downloadProgressAC = UIAlertController(title: "", message: "", preferredStyle: UIAlertController.Style.alert)
+            self.downloadProgressAlert = downloadProgressAC
+            self.present(downloadProgressAC, animated: true, completion: nil)
+        }
+    }
 //
 //MARK: - IBAction Methods
     @IBAction func onCaptureButtonClicked(_ sender: Any) {
@@ -831,30 +835,24 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         self.present(alertController, animated: true, completion: nil)
     }
     @IBAction func onDownloadButtonClicked(_ sender: Any) {
-        //TODO:
-        //    weakSelf(target);
-        //    DJICamera *camera = [self fetchCamera];
-        //    if (camera.isPlaybackSupported) {
-        //        [camera setMode:DJICameraModePlayback withCompletion:^(NSError * _Nullable error) {
-        //            weakReturn(target);
-        //
-        //            if (error) {
-        //                NSLog(@"Enter playback mode failed: %@", error.description);
-        //            }else {
-        //                [target selectPhotosForPlaybackMode];
-        //            }
-        //        }];
-        //    }
-        //    else if (camera.isMediaDownloadModeSupported) {
-        //        [camera setMode:DJICameraModeMediaDownload withCompletion:^(NSError * _Nullable error) {
-        //            weakReturn(target);
-        //            if (error) {
-        //                NSLog(@"Enter Media Download mode failed: %@", error.description);
-        //            } else {
-        //                [target loadMediaListsForMediaDownloadMode];
-        //            }
-        //        }];
-        //    }
+        guard let camera = self.fetchCamera() else { return }
+        if camera.isPlaybackSupported() {
+            camera.setMode(DJICameraMode.playback) { [weak self] (error:Error?) in
+                if let error = error {
+                    print("Enter playback mode failed: \(error.localizedDescription)")
+                } else {
+                    self?.selectPhotosForPlaybackMode()
+                }
+            }
+        } else if camera.isMediaDownloadModeSupported() {
+            camera.setMode(DJICameraMode.mediaDownload) { [weak self] (error:Error?) in
+                if let error = error {
+                    print("Enter Media Download mode failed: \(error.localizedDescription)")
+                } else {
+                    self?.loadMediaListsForMediaDownloadMode()
+                }
+            }
+        }
     }
     
     //TODO: unused?
