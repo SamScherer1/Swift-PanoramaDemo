@@ -115,7 +115,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
 //}
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Stitching" {
-            segue.destination.setValue(self.imageArray, forKey: "imageArray")
+            segue.destination.setValue(NSMutableArray(array: self.imageArray!), forKey: "imageArray")
         }
     }
     
