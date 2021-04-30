@@ -7,13 +7,30 @@
 //
 
 #import "Stitching.h"
+#import "Cropping.h"
 #import "StitchingWrapper.h"
 #import "OpenCVConversion.h"
+#import <UIKit/UIKit.h>
 
 #define HIGHT_COMPRESS_RATIO 0.2
 #define LOW_COMPRESS_RATIO 1.0
 
 @implementation Stitching
+
++ (UIImage *)imageWithArray:(NSMutableArray *)imageArray {
+    cv::Mat stitchedImage;
+    cv::Mat croppedImage;
+    if ([self stitchImageWithArray:imageArray andResult:stitchedImage]) {
+        if ([Cropping cropWithMat:stitchedImage andResult:croppedImage]) {
+            return [OpenCVConversion UIImageFromCVMat:croppedImage];
+        } else {
+            NSLog(@"Failed to crop image");
+        }
+    } else {
+        NSLog(@"Failed to stitch image");
+    }
+    return nil;
+}
 
 + (bool) stitchImageWithArray:(NSMutableArray*)imageArray andResult:(cv::Mat &) result {
     if (imageArray == nil || imageArray.count == 0) {

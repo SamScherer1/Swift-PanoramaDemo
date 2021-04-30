@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+@class UIImage;
 
 @interface Stitching : NSObject
 
-+ (bool) stitchImageWithArray:(NSMutableArray*)imageArray andResult:(cv::Mat &) result;
+//+ (bool) stitchImageWithArray:(NSMutableArray*)imageArray andResult:(cv::Mat &) result;
+
++ (UIImage *)imageWithArray:(NSMutableArray *)imageArray;
 
 @end
