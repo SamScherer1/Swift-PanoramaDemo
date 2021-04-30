@@ -13,18 +13,10 @@ import DJIWidget
 
 let kNumberOfPhotosInPanorama = 8
 let kRotationAngle = 45.0
-let kUseBridge = false
+let kUseBridge = true
 let kBridgeIP = "192.168.128.169"
 
 class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIVideoFeedListener {
-    
-    //#define PHOTO_NUMBER 8
-//    let numberOfPhotos = 8
-//    //#define ROTATE_ANGLE 45
-//    let rotationAngle = 45.0
-//
-//    let useBridge = true
-//    let bridgeIP = "192.168.128.169"
     
     //#define kCaptureModeAlertTag 100
     
@@ -51,17 +43,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     var aircraftYaw = 0.0
     
     //MARK: - Inherited Methods
-    //
-    //- (void)viewDidLoad {
-    //    [super viewDidLoad];
-    //
-    //    self.title = @"Panorama Demo";
-    //    self.aircraftLocation = kCLLocationCoordinate2DInvalid;
-    //
-    //    [self registerApp];
-    //
-    //}
-    
     override func viewDidLoad() {
         
         self.title = "Panorama Demo"
@@ -768,9 +749,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
 //    [self.downloadProgressAlert setMessage:[NSString stringWithFormat:@"Download (%d/%d)", 0, PHOTO_NUMBER]];
         self.downloadProgressAlert?.title = "Downloading..."
         self.downloadProgressAlert?.message = "Download (0/\(kNumberOfPhotosInPanorama))"
-//
-//    weakSelf(target);
-//    for (int i = (int)files.count - PHOTO_NUMBER; i < files.count; i++) {
+
         for i in (files.count - kNumberOfPhotosInPanorama) ..< files.count {
 //        DJIMediaFile *file = files[i];
             let file = files[i]
@@ -790,7 +769,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     }
 
                     finishedFileCount = finishedFileCount + 1
-                    self.downloadProgressAlert?.message = "Download (\(finishedFileCount)/\(kNumberOfPhotosInPanorama)"
+                    self.downloadProgressAlert?.message = "Download (\(finishedFileCount)/\(kNumberOfPhotosInPanorama))"
 
                     if finishedFileCount == kNumberOfPhotosInPanorama {
 //
@@ -809,6 +788,10 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                         let downloadCompleteController = UIAlertController(title: "Download Complete",
                                                                            message: "\(kNumberOfPhotosInPanorama) files have been downloaded. ",
                                                                            preferredStyle: UIAlertController.Style.alert)
+                        let okAction = UIAlertAction(title: "OK", style: .cancel) { (action:UIAlertAction) in
+                            downloadCompleteController.dismiss(animated: true, completion: nil)
+                        }
+                        downloadCompleteController.addAction(okAction)
                         self.present(downloadCompleteController, animated: true, completion: nil)
                         
                         camera.setMode(DJICameraMode.shootPhoto) { (error:Error?) in
@@ -822,7 +805,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     }
                 }
             }
-//        [camera.mediaManager.taskScheduler moveTaskToEnd:task];
             camera.mediaManager?.taskScheduler.moveTask(toEnd: task)
         }
     }
