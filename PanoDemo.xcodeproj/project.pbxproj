@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3A261F93263CAD1C00FA2F9F /* StitchingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A261F92263CAD1C00FA2F9F /* StitchingViewController.swift */; };
+		3A261F95263CC48A00FA2F9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A261F94263CC48A00FA2F9F /* AppDelegate.swift */; };
 		3A37FDDA2639EACA00BB8D99 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */; };
 		4A57C72C45ACD09771D23046 /* libPods-PanoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */; };
 		A419408D1DCB41970076478C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419408C1DCB41970076478C /* opencv2.framework */; };
@@ -21,8 +22,6 @@
 		A4FE15861B8EEF1500C58EB3 /* OpenCVConversion.mm in Sources */ = {isa = PBXBuildFile; fileRef = A4FE15801B8EEF1500C58EB3 /* OpenCVConversion.mm */; };
 		A4FE15871B8EEF1500C58EB3 /* Stitching.mm in Sources */ = {isa = PBXBuildFile; fileRef = A4FE15821B8EEF1500C58EB3 /* Stitching.mm */; };
 		A4FE15881B8EEF1500C58EB3 /* StitchingWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A4FE15831B8EEF1500C58EB3 /* StitchingWrapper.cpp */; };
-		B349F87E1B68804900B5FEA6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B349F87D1B68804900B5FEA6 /* main.m */; };
-		B349F8811B68804900B5FEA6 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B349F8801B68804900B5FEA6 /* AppDelegate.mm */; };
 		B349F8871B68804900B5FEA6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B349F8851B68804900B5FEA6 /* Main.storyboard */; };
 		B349F8891B68804900B5FEA6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B349F8881B68804900B5FEA6 /* Images.xcassets */; };
 		B349F88C1B68804900B5FEA6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B349F88A1B68804900B5FEA6 /* LaunchScreen.xib */; };
@@ -65,6 +64,7 @@
 /* Begin PBXFileReference section */
 		0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PanoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A261F92263CAD1C00FA2F9F /* StitchingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchingViewController.swift; sourceTree = "<group>"; };
+		3A261F94263CC48A00FA2F9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A37FDD82639EAC900BB8D99 /* PanoDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PanoDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewController.swift; sourceTree = "<group>"; };
 		3E5237D4185BE95C5C9375F0 /* Pods-PanoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.release.xcconfig"; path = "Target Support Files/Pods-PanoDemo/Pods-PanoDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -86,9 +86,6 @@
 		AC0235A8882B3AC2D59987DC /* Pods-PanoDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.debug.xcconfig"; path = "Target Support Files/Pods-PanoDemo/Pods-PanoDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		B349F8781B68804900B5FEA6 /* PanoDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PanoDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B349F87C1B68804900B5FEA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B349F87D1B68804900B5FEA6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B349F87F1B68804900B5FEA6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		B349F8801B68804900B5FEA6 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		B349F8861B68804900B5FEA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B349F8881B68804900B5FEA6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B349F88B1B68804900B5FEA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -183,9 +180,9 @@
 		B349F87A1B68804900B5FEA6 /* PanoDemo */ = {
 			isa = PBXGroup;
 			children = (
-				B349F87F1B68804900B5FEA6 /* AppDelegate.h */,
-				B349F8801B68804900B5FEA6 /* AppDelegate.mm */,
+				3A261F94263CC48A00FA2F9F /* AppDelegate.swift */,
 				B349F8851B68804900B5FEA6 /* Main.storyboard */,
+				3A37FDD82639EAC900BB8D99 /* PanoDemo-Bridging-Header.h */,
 				A4FE157C1B8EEF1500C58EB3 /* Models */,
 				B349F9F41B6B0D0B00B5FEA6 /* ViewControllers */,
 				B349F8AB1B68838500B5FEA6 /* Frameworks */,
@@ -198,7 +195,6 @@
 			isa = PBXGroup;
 			children = (
 				B349F87C1B68804900B5FEA6 /* Info.plist */,
-				B349F87D1B68804900B5FEA6 /* main.m */,
 				B349F9C21B6A121800B5FEA6 /* PrefixHeader.pch */,
 				B349F8881B68804900B5FEA6 /* Images.xcassets */,
 				B349F88A1B68804900B5FEA6 /* LaunchScreen.xib */,
@@ -242,7 +238,6 @@
 			children = (
 				3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */,
 				3A261F92263CAD1C00FA2F9F /* StitchingViewController.swift */,
-				3A37FDD82639EAC900BB8D99 /* PanoDemo-Bridging-Header.h */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -383,9 +378,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B349F8811B68804900B5FEA6 /* AppDelegate.mm in Sources */,
+				3A261F95263CC48A00FA2F9F /* AppDelegate.swift in Sources */,
 				A4FE15881B8EEF1500C58EB3 /* StitchingWrapper.cpp in Sources */,
-				B349F87E1B68804900B5FEA6 /* main.m in Sources */,
 				3A261F93263CAD1C00FA2F9F /* StitchingViewController.swift in Sources */,
 				3A37FDDA2639EACA00BB8D99 /* CaptureViewController.swift in Sources */,
 				A4FE15871B8EEF1500C58EB3 /* Stitching.mm in Sources */,

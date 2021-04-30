@@ -3,5 +3,3 @@
 //
 
 #import "Stitching.h"
-//#import "OpenCVConversion.h"
-//#import "Cropping.h"
