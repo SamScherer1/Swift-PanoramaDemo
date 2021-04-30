@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="F5E-Vz-n1R">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="F5E-Vz-n1R">
     <device id="ipad9_7" orientation="landscape" layout="fullscreen" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -153,7 +153,7 @@
         <!--Stitching View Controller-->
         <scene sceneID="HGA-LZ-duD">
             <objects>
-                <viewController id="HXZ-11-iEw" customClass="StitchingViewController" sceneMemberID="viewController">
+                <viewController id="HXZ-11-iEw" customClass="StitchingViewController" customModule="PanoDemo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="CHm-qI-CIP"/>
                         <viewControllerLayoutGuide type="bottom" id="NCq-LQ-b0d"/>
@@ -195,8 +195,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="activityIndicator" destination="8gg-bm-DXF" id="R35-tz-Nql"/>
-                        <outlet property="imageView" destination="9U5-x7-2Yb" id="E2s-Fx-0pm"/>
+                        <outlet property="activityIndicator" destination="8gg-bm-DXF" id="nRK-LD-eMD"/>
+                        <outlet property="imageView" destination="9U5-x7-2Yb" id="hRR-3w-ADO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gRO-mW-rQM" userLabel="First Responder" sceneMemberID="firstResponder"/>

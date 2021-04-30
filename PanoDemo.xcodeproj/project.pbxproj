@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A261F93263CAD1C00FA2F9F /* StitchingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A261F92263CAD1C00FA2F9F /* StitchingViewController.swift */; };
 		3A37FDDA2639EACA00BB8D99 /* CaptureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */; };
 		4A57C72C45ACD09771D23046 /* libPods-PanoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */; };
 		A419408D1DCB41970076478C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419408C1DCB41970076478C /* opencv2.framework */; };
@@ -25,7 +26,6 @@
 		B349F8871B68804900B5FEA6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B349F8851B68804900B5FEA6 /* Main.storyboard */; };
 		B349F8891B68804900B5FEA6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B349F8881B68804900B5FEA6 /* Images.xcassets */; };
 		B349F88C1B68804900B5FEA6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B349F88A1B68804900B5FEA6 /* LaunchScreen.xib */; };
-		B349F8A61B68816600B5FEA6 /* CaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B349F8A51B68816600B5FEA6 /* CaptureViewController.m */; };
 		B349F9BC1B69F96700B5FEA6 /* StitchingViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = B349F9BB1B69F96700B5FEA6 /* StitchingViewController.mm */; };
 		B349F9C11B6A11D800B5FEA6 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B349F9C01B6A11D800B5FEA6 /* AssetsLibrary.framework */; };
 		B349F9C41B6A20B200B5FEA6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B349F9C31B6A20B200B5FEA6 /* CoreGraphics.framework */; };
@@ -65,6 +65,7 @@
 
 /* Begin PBXFileReference section */
 		0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PanoDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A261F92263CAD1C00FA2F9F /* StitchingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StitchingViewController.swift; sourceTree = "<group>"; };
 		3A37FDD82639EAC900BB8D99 /* PanoDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PanoDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewController.swift; sourceTree = "<group>"; };
 		3E5237D4185BE95C5C9375F0 /* Pods-PanoDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PanoDemo.release.xcconfig"; path = "Target Support Files/Pods-PanoDemo/Pods-PanoDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -94,7 +95,6 @@
 		B349F88B1B68804900B5FEA6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B349F8961B68804A00B5FEA6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B349F8971B68804A00B5FEA6 /* PanoDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PanoDemoTests.m; sourceTree = "<group>"; };
-		B349F8A51B68816600B5FEA6 /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
 		B349F9BA1B69F96700B5FEA6 /* StitchingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StitchingViewController.h; sourceTree = "<group>"; };
 		B349F9BB1B69F96700B5FEA6 /* StitchingViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StitchingViewController.mm; sourceTree = "<group>"; };
 		B349F9C01B6A11D800B5FEA6 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
@@ -243,10 +243,10 @@
 		B349F9F41B6B0D0B00B5FEA6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B349F8A51B68816600B5FEA6 /* CaptureViewController.m */,
 				3A37FDD92639EACA00BB8D99 /* CaptureViewController.swift */,
 				B349F9BA1B69F96700B5FEA6 /* StitchingViewController.h */,
 				B349F9BB1B69F96700B5FEA6 /* StitchingViewController.mm */,
+				3A261F92263CAD1C00FA2F9F /* StitchingViewController.swift */,
 				3A37FDD82639EAC900BB8D99 /* PanoDemo-Bridging-Header.h */,
 			);
 			name = ViewControllers;
@@ -391,7 +391,7 @@
 				B349F8811B68804900B5FEA6 /* AppDelegate.mm in Sources */,
 				A4FE15881B8EEF1500C58EB3 /* StitchingWrapper.cpp in Sources */,
 				B349F87E1B68804900B5FEA6 /* main.m in Sources */,
-				B349F8A61B68816600B5FEA6 /* CaptureViewController.m in Sources */,
+				3A261F93263CAD1C00FA2F9F /* StitchingViewController.swift in Sources */,
 				3A37FDDA2639EACA00BB8D99 /* CaptureViewController.swift in Sources */,
 				A4FE15871B8EEF1500C58EB3 /* Stitching.mm in Sources */,
 				B349F9BC1B69F96700B5FEA6 /* StitchingViewController.mm in Sources */,

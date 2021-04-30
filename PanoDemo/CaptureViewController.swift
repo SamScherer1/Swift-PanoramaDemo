@@ -108,14 +108,11 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
     
 //Pass the downloaded photos to StitchingViewController
-//-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-//    if([segue.identifier isEqualToString:@"Stitching"]) {
-//        [segue.destinationViewController setValue:self.imageArray forKey:@"imageArray"];
-//    }
-//}
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Stitching" {
-            segue.destination.setValue(NSMutableArray(array: self.imageArray!), forKey: "imageArray")
+            if let imageArray = self.imageArray {
+                segue.destination.setValue(NSMutableArray(array: self.imageArray!), forKey: "imageArray")
+            }
         }
     }
     
@@ -141,11 +138,8 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             }
         }
         
-        //    [[DJIVideoPreviewer instance] setView:self.fpvPreviewView];
         DJIVideoPreviewer.instance()?.setView(self.fpvPreviewView)
-        //    [[DJISDKManager videoFeeder].primaryVideoFeed addListener:self withQueue:nil];
         DJISDKManager.videoFeeder()?.primaryVideoFeed.add(self, with: nil)//TODO: add logic for enterprise drones with secondary feeds (FPV demo has it i think...)
-        //    [[DJIVideoPreviewer instance] start];
         DJIVideoPreviewer.instance()?.start()
     }
 
@@ -168,24 +162,23 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
     
     //MARK: - DJIVideoFeedListener
-    func videoFeed(_ videoFeed: DJIVideoFeed, didUpdateVideoData videoData: Data) {
-        //[[DJIVideoPreviewer instance] push:(uint8_t *)videoData.bytes length:(int)videoData.length];
+    func videoFeed(_ videoFeed: DJIVideoFeed, didUpdateVideoData rawData: Data) {
+        let videoData = rawData as NSData
+        let videoBuffer = UnsafeMutablePointer<UInt8>.allocate(capacity: videoData.length)
+        videoData.getBytes(videoBuffer, length: videoData.length)
+        DJIVideoPreviewer.instance().push(videoBuffer, length: Int32(videoData.count))
     }
 
     //MARK: - DJIPlaybackDelegate
     func playbackManager(_ playbackManager: DJIPlaybackManager, didUpdate playbackState: DJICameraPlaybackState) {
-        //self.numberSelectedPhotos = playbackState.selectedFileCount;
+        self.numberSelectedPhotos = Int(playbackState.selectedFileCount)
     }
     
     //MARK: - DJIFlightControllerDelegate Method
     func flightController(_ fc: DJIFlightController, didUpdate state: DJIFlightControllerState) {
-        //    self.aircraftLocation = CLLocationCoordinate2DMake(state.aircraftLocation.coordinate.latitude, state.aircraftLocation.coordinate.longitude);
         self.aircraftLocation = CLLocationCoordinate2DMake(state.aircraftLocation?.coordinate.latitude ?? 0, state.aircraftLocation?.coordinate.longitude ?? 0)
-        //    self.gpsSignalLevel = state.GPSSignalLevel;
         self.gpsSignalLevel = state.gpsSignalLevel
-        //    self.aircraftAltitude = state.altitude;
         self.aircraftAltitude = state.altitude
-        //    self.aircraftYaw = state.attitude.yaw;
         self.aircraftYaw = state.attitude.yaw
     }
 
@@ -215,13 +208,9 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
 
     func showAlertWith(title:String, message:String) {
-        //    UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        //    UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
         let okAction = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
-        //    [alert addAction:okAction];
         alert.addAction(okAction)
-        //    [self presentViewController:alert animated:YES completion:nil];
         self.present(alert, animated: true, completion: nil)
     }
     
@@ -244,23 +233,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
 
     func setCameraModeToShootPhoto() {
-        //    DJICamera *camera = [target fetchCamera];
-        //    [camera getModeWithCompletion:^(DJICameraMode mode, NSError * _Nullable error) {
-        //        if (error == nil) {
-        //            if (mode == DJICameraModeShootPhoto) {
-        //                [target enableVirtualStick];
-        //            }
-        //            else {
-        //                [camera setMode:DJICameraModeShootPhoto withCompletion:^(NSError * _Nullable error) {
-        //                    weakReturn(target);
-        //                    if (error == nil) {
-        //                        [target enableVirtualStick];
-        //                    }
-        //                }];
-        //            }
-        //        }
-        //    }];
-        print("called setCameraModeToShootPhoto")
         let camera = self.fetchCamera()
         camera?.getModeWithCompletion({ [weak self] (mode:DJICameraMode, error:Error?) in
             if error == nil {
@@ -279,18 +251,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
     
     func enableVirtualStick() {//TODO: rename something appropriate
-        //    DJIFlightController *flightController = [self fetchFlightController];
-        //    [flightController setYawControlMode:DJIVirtualStickYawControlModeAngle];
-        //    [flightController setRollPitchCoordinateSystem:DJIVirtualStickFlightCoordinateSystemGround];
-        //    [flightController setVirtualStickModeEnabled:YES withCompletion:^(NSError * _Nullable error) {
-        //        if (error) {
-        //            NSLog(@"Enable VirtualStickControlMode Failed");
-        //        }
-        //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //            [self executeVirtualStickControl];
-        //        });
-        //    }];
-        print("called enableVirtualStick")
         if let flightController = self.fetchFlightController() {
             flightController.yawControlMode = DJIVirtualStickYawControlMode.angle
             flightController.rollPitchCoordinateSystem = DJIVirtualStickFlightCoordinateSystem.ground
@@ -311,27 +271,21 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
 //    __weak DJICamera *camera = [self fetchCamera];
         let camera = self.fetchCamera()
         
-//    for(int i = 0;i < PHOTO_NUMBER; i++){
         for photoNumber in 0 ..< kNumberOfPhotosInPanorama {
             //Filter the angle between -180 ~ 0, 0 ~ 180
             var yawAngle = kRotationAngle * Double(photoNumber)
             if yawAngle > 180.0 {
                 yawAngle = yawAngle - 360.0
             }
-    //
-    //        NSTimer *timer =  [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(rotateDrone:) userInfo:@{@"YawAngle":@(yawAngle)} repeats:YES];
-            var timer = Timer(timeInterval: 0.2, target: self, selector: #selector(rotateDrone), userInfo: ["YawAngle":yawAngle], repeats: true)
-    //        [timer fire];
+            
+            let timer = Timer(timeInterval: 0.2, target: self, selector: #selector(rotateDrone), userInfo: ["YawAngle":yawAngle], repeats: true)
+
             timer.fire()
-    //
-    //        [[NSRunLoop currentRunLoop]addTimer:timer forMode:NSDefaultRunLoopMode];
-    //        [[NSRunLoop currentRunLoop]runUntilDate:[NSDate dateWithTimeIntervalSinceNow:2]];
-    //        [timer invalidate];
 
             RunLoop.current.add(timer, forMode: RunLoop.Mode.default)
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 2))
             timer.invalidate()
-    //
+            
             //TODO: how to destroy the timer?
     //        timer = nil;
             
@@ -347,14 +301,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             sleep(2)
         }
 
-//    DJIFlightController *flightController = [self fetchFlightController];
-//    [flightController setVirtualStickModeEnabled:NO withCompletion:^(NSError * _Nullable error) {
-//        if (error) {
-//            NSLog(@"Disable VirtualStickControlMode Failed");
-//            DJIFlightController *flightController = [self fetchFlightController];
-//            [flightController setVirtualStickModeEnabled:NO withCompletion:nil];
-//        }
-//    }];
         let flightController = self.fetchFlightController()
         if let flightController = flightController {
             flightController.setVirtualStickModeEnabled(false) { [weak self] (error:Error?) in
@@ -390,18 +336,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
 
 //MARK: - Shoot Panorama By Rotating Gimbal Methods
-//- (void)shootPanoRotateGimbal {
     func shootPanoRotateGimbal() {
-        //    DJICamera *camera = [self fetchCamera];
-        //    weakSelf(target);
-        //    [camera setMode:DJICameraModeShootPhoto withCompletion:^(NSError * _Nullable error) {
-        //        weakReturn(target);
-        //        if (!error) {
-        //            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        //                [target executeRotateGimbal];
-        //            });
-        //        }
-        //    }];
         guard let camera = self.fetchCamera() else {
             print("fetchCamera returned nil")
             return
@@ -416,8 +351,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
     
     func executeRotateGimbal() {
-//    DJIGimbal *gimbal = [self fetchGimbal];
-//    __weak DJICamera *camera = [self fetchCamera];
         guard let gimbal = self.fetchGimbal() else {return}
         guard let camera = self.fetchCamera() else {return}
         
@@ -431,23 +364,12 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         
         //rotate the gimbal clockwise
         var yawAngle = 0.0
-//
-//    for(int i = 0; i < PHOTO_NUMBER; i++){
+        
         for photoNumber in 0 ..< kNumberOfPhotosInPanorama {
             print("SS Start Shoot Photo \(photoNumber)")
-//        [camera setShootPhotoMode:DJICameraShootPhotoModeSingle withCompletion:^(NSError * _Nullable error) {
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                [camera startShootPhotoWithCompletion:^(NSError * _Nullable error) {
-//                    if (error) {
-//                        NSLog(@"SS ShootPhotoError: %@", error.description);
-//                    } else {
-//                        NSLog(@"SS Successfully Shot Photo");
-//                    }
-//                }];
-//            });
-//        }];
             
             camera.setShootPhotoMode(DJICameraShootPhotoMode.single) { (error:Error?) in
+                //dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
                     camera.startShootPhoto { (error:Error?) in
                         if let error = error {
@@ -593,15 +515,12 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             if let error = error {
                 self.showAlertWith(title: "Start Mission Failed", message: error.localizedDescription)
             } else {
-                //[target showAlertViewWithTitle:@"Start Mission Success" withMessage:nil];
                 self.showAlertWith(title: "Start Mission Success", message: "")
             }
         })
     }
 
 //MARK: - Select the lastest photos for Panorama
-//
-//-(void)selectPhotosForPlaybackMode {
     func selectPhotosForPlaybackMode() {
 //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async { [weak self] in
@@ -614,9 +533,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             
             guard let self = self else { return }
             while self.numberSelectedPhotos != kNumberOfPhotosInPanorama {
-//            [camera.playbackManager selectAllFilesInPage];
                 camera?.playbackManager?.selectAllFilesInPage()
-//            sleep(1);
                 sleep(1)
                 
                 if self.numberSelectedPhotos > kNumberOfPhotosInPanorama {
@@ -630,7 +547,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     sleep(1)
                 }
              }
-            //[target downloadPhotosForPlaybackMode];
             self.downloadPhotosForPlaybackMode()
         }
     }
@@ -745,16 +661,12 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             }
         })
         
-//    [self.downloadProgressAlert setTitle:[NSString stringWithFormat:@"Downloading..."]];
-//    [self.downloadProgressAlert setMessage:[NSString stringWithFormat:@"Download (%d/%d)", 0, PHOTO_NUMBER]];
         self.downloadProgressAlert?.title = "Downloading..."
         self.downloadProgressAlert?.message = "Download (0/\(kNumberOfPhotosInPanorama))"
 
         for i in (files.count - kNumberOfPhotosInPanorama) ..< files.count {
-//        DJIMediaFile *file = files[i];
             let file = files[i]
-//
-//        DJIFetchMediaTask *task = [DJIFetchMediaTask taskWithFile:file content:DJIFetchMediaTaskContentPreview andCompletion:^(DJIMediaFile * _Nonnull file, DJIFetchMediaTaskContent content, NSError * _Nullable error) {
+            
             let task = DJIFetchMediaTask.init(file: file, content: DJIFetchMediaTaskContent.preview) { [weak self] (file:DJIMediaFile, content:DJIFetchMediaTaskContent, error:Error?) in
                 guard let self = self else { return }
                 if let error = error {
@@ -762,6 +674,12 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     //                target.downloadProgressAlert = nil;
                     //                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download failed" message:[NSString stringWithFormat:@"Download file %@ failed. ", file.fileName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     //                [alertView show];
+                    self.downloadProgressAlert?.dismiss(animated: true, completion: nil)
+                    self.downloadProgressAlert = nil
+                    let downloadFailController = UIAlertController(title: "Download failed",
+                                                                   message: "Download file \(file.fileName) failed. ",
+                                                                   preferredStyle: .alert)
+                    
                 } else {
 //                [target.imageArray addObject:file.preview];
                     if let image = file.preview {
@@ -772,17 +690,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     self.downloadProgressAlert?.message = "Download (\(finishedFileCount)/\(kNumberOfPhotosInPanorama))"
 
                     if finishedFileCount == kNumberOfPhotosInPanorama {
-//
-//                    [target.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//                    target.downloadProgressAlert = nil;
-//                    UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download Complete" message:[NSString stringWithFormat:@"%d files have been downloaded. ", PHOTO_NUMBER] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                    [alertView show];
-//                    [camera setMode:DJICameraModeShootPhoto withCompletion:^(NSError * _Nullable error) {
-//                        if (error) {
-//                            UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Set CameraMode to ShootPhoto Failed" message:[NSString stringWithFormat:@"%@", error.description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                            [alertView show];
-//                        }
-//                    }];
                         self.downloadProgressAlert?.dismiss(animated: true, completion: nil)
                         self.downloadProgressAlert = nil
                         let downloadCompleteController = UIAlertController(title: "Download Complete",
