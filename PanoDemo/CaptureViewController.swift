@@ -13,7 +13,7 @@ import DJIWidget
 
 let kNumberOfPhotosInPanorama = 8
 let kRotationAngle = 45.0
-let kUseBridge = true
+let kUseBridge = false
 let kBridgeIP = "192.168.128.169"
 
 class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIVideoFeedListener {
@@ -766,25 +766,33 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         
 //    [self.downloadProgressAlert setTitle:[NSString stringWithFormat:@"Downloading..."]];
 //    [self.downloadProgressAlert setMessage:[NSString stringWithFormat:@"Download (%d/%d)", 0, PHOTO_NUMBER]];
+        self.downloadProgressAlert?.title = "Downloading..."
+        self.downloadProgressAlert?.message = "Download (0/\(kNumberOfPhotosInPanorama))"
 //
 //    weakSelf(target);
 //    for (int i = (int)files.count - PHOTO_NUMBER; i < files.count; i++) {
+        for i in (files.count - kNumberOfPhotosInPanorama) ..< files.count {
 //        DJIMediaFile *file = files[i];
+            let file = files[i]
 //
 //        DJIFetchMediaTask *task = [DJIFetchMediaTask taskWithFile:file content:DJIFetchMediaTaskContentPreview andCompletion:^(DJIMediaFile * _Nonnull file, DJIFetchMediaTaskContent content, NSError * _Nullable error) {
-//            weakReturn(target);
-//            if (error) {
-//                [target.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-//                target.downloadProgressAlert = nil;
-//                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download failed" message:[NSString stringWithFormat:@"Download file %@ failed. ", file.fileName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-//                [alertView show];
-//            }
-//            else {
+            let task = DJIFetchMediaTask.init(file: file, content: DJIFetchMediaTaskContent.preview) { [weak self] (file:DJIMediaFile, content:DJIFetchMediaTaskContent, error:Error?) in
+                guard let self = self else { return }
+                if let error = error {
+                    //                [target.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
+                    //                target.downloadProgressAlert = nil;
+                    //                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download failed" message:[NSString stringWithFormat:@"Download file %@ failed. ", file.fileName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    //                [alertView show];
+                } else {
 //                [target.imageArray addObject:file.preview];
-//                finishedFileCount++;
-//                [target.downloadProgressAlert setMessage:[NSString stringWithFormat:@"Download (%d/%d)", finishedFileCount, PHOTO_NUMBER]];
-//
-//                if (finishedFileCount == PHOTO_NUMBER) {
+                    if let image = file.preview {
+                        self.imageArray?.append(image)
+                    }
+
+                    finishedFileCount = finishedFileCount + 1
+                    self.downloadProgressAlert?.message = "Download (\(finishedFileCount)/\(kNumberOfPhotosInPanorama)"
+
+                    if finishedFileCount == kNumberOfPhotosInPanorama {
 //
 //                    [target.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
 //                    target.downloadProgressAlert = nil;
@@ -796,12 +804,28 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
 //                            [alertView show];
 //                        }
 //                    }];
-//                }
-//            }
-//        }];
+                        self.downloadProgressAlert?.dismiss(animated: true, completion: nil)
+                        self.downloadProgressAlert = nil
+                        let downloadCompleteController = UIAlertController(title: "Download Complete",
+                                                                           message: "\(kNumberOfPhotosInPanorama) files have been downloaded. ",
+                                                                           preferredStyle: UIAlertController.Style.alert)
+                        self.present(downloadCompleteController, animated: true, completion: nil)
+                        
+                        camera.setMode(DJICameraMode.shootPhoto) { (error:Error?) in
+                            if let error = error {
+                                let setCameraModeFailController = UIAlertController(title: "Set CameraMode to ShootPhoto Failed",
+                                                                                   message: error.localizedDescription,
+                                                                                   preferredStyle: UIAlertController.Style.alert)
+                                self.present(setCameraModeFailController, animated: true, completion: nil)
+                            }
+                        }
+                    }
+                }
+            }
 //        [camera.mediaManager.taskScheduler moveTaskToEnd:task];
-//    }
-}
+            camera.mediaManager?.taskScheduler.moveTask(toEnd: task)
+        }
+    }
 //
     func showDownloadProgressAlert() {
         if self.downloadProgressAlert == nil {
