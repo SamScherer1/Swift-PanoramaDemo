@@ -11,41 +11,22 @@ import Foundation
 import UIKit
 
 class StitchingViewController : UIViewController {
-    @objc public var imageArray : NSMutableArray? //TODO: use [UIImage] ?
+    public var imageArray : NSMutableArray? //TODO: use [UIImage] ?
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageView: UIImageView!
     
     override func viewDidLoad() {
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async { [weak self] in
-            
-            // cv::Mat stitchMat;
-            // if(![Stitching stitchImageWithArray:weakImageArray andResult:stitchMat]) {
-            //     [weakSelf showAlertWithTitle:@"Stitching" andMessage:@"Stitching failed"];
-            //     return;
-            // }
-            //
-            // cv::Mat cropedMat;
-            // if(![Cropping cropWithMat:stitchMat andResult:cropedMat]){
-            //     [weakSelf showAlertWithTitle:@"Cropping" andMessage:@"cropping failed"];
-            //     return;
-            // }
-            //
-            // UIImage *stitchImage=[OpenCVConversion UIImageFromCVMat:cropedMat];
             guard let self = self else { return }
-            guard let stitchImage = Stitching.image(with: self.imageArray) else {
+            guard let stitchedImage = Stitching.image(with: self.imageArray) else {
                 self.showAlertWith(title: "Processing", message: "Stitching and cropping failed")
                 return
             }
-            UIImageWriteToSavedPhotosAlbum(stitchImage, nil, nil, nil)
-            //
-            // dispatch_async(dispatch_get_main_queue(), ^{
-            //
-            // [weakSelf showAlertWithTitle:@"Save Photo Success" andMessage:@"Panoroma photo is saved to Album, please check it!"];
-            //     _imageView.image=stitchImage;
-            // });
+            UIImageWriteToSavedPhotosAlbum(stitchedImage, nil, nil, nil)
+            
             DispatchQueue.main.async { [weak self] in
-                self?.imageView.image = stitchImage
+                self?.imageView.image = stitchedImage
             }
         }
         super.viewDidLoad()

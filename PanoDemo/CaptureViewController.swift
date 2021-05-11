@@ -25,21 +25,13 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     @IBOutlet weak var downloadBtn: UIButton!
     @IBOutlet weak var stitchBtn: UIButton!
     
-    //@property (nonatomic, assign) __block int numberSelectedPhotos;
     var numberSelectedPhotos = 0
-    //@property (strong, nonatomic) UIAlertView* downloadProgressAlert;
     var downloadProgressAlert : UIAlertController?
-    //@property (strong, nonatomic) UIAlertView* uploadMissionProgressAlert;
     var uploadMissionProgressAlertController : UIAlertController?
-    //@property (strong, nonatomic) NSMutableArray* imageArray;
     var imageArray : [UIImage]?
-    //@property (atomic) CLLocationCoordinate2D aircraftLocation;
     var aircraftLocation : CLLocationCoordinate2D?
-    //@property (atomic) double aircraftAltitude;
     var aircraftAltitude = 0.0
-    //@property (atomic) DJIGPSSignalLevel gpsSignalLevel;
     var gpsSignalLevel = DJIGPSSignalLevel.levelNone
-    //@property (atomic) double aircraftYaw;
     var aircraftYaw = 0.0
     
     //MARK: - Inherited Methods
@@ -53,31 +45,19 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     
     // Hack to allow user to see FPV view (for some reason switching camera modes fixes the view not showing initially)
     func addCameraToggleButton() {
-        //    UIButton *testBtn = [UIButton buttonWithType:UIButtonTypeSystem];
         let testBtn = UIButton(type: UIButton.ButtonType.system)
-        //    [self.view addSubview:testBtn];
         self.view.addSubview(testBtn)
-        //    testBtn.translatesAutoresizingMaskIntoConstraints = NO;
         testBtn.translatesAutoresizingMaskIntoConstraints = false
-        //    [testBtn.leftAnchor constraintEqualToAnchor:self.view.leftAnchor].active = YES;
         testBtn.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        //    [testBtn.centerYAnchor constraintEqualToAnchor:self.view.centerYAnchor].active = YES;
         testBtn.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        //    [testBtn.widthAnchor constraintEqualToConstant:50.0].active = YES;
         testBtn.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        //    [testBtn.heightAnchor constraintEqualToConstant:50.0].active = YES;
         testBtn.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        //    testBtn.titleLabel.textColor = UIColor.blackColor;
-        //testBtn.titleLabel?.textColor = UIColor.black
-        //    testBtn.backgroundColor = UIColor.grayColor;
         testBtn.backgroundColor = UIColor.lightGray
-        //    [testBtn setEnabled:YES];//TODO: necessary?
-        //    [testBtn setTitle:@"test" forState:UIControlStateNormal];
         testBtn.setTitle("Toggle Camera Mode", for: UIControl.State.normal)
         testBtn.addTarget(self, action: #selector(toggleCamera), for: UIControl.Event.touchUpInside)
-        //    [testBtn addTarget:self action:@selector(testBtnAction) forControlEvents:UIControlEventTouchUpInside];
     }
 
+    //TODO: test this. is toggle camera btn working?
     // Hack to allow user to see FPV view (for some reason switching camera modes fixes the view not showing initially)
     @objc func toggleCamera() {
         let camera = self.fetchCamera()
@@ -107,7 +87,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         DJISDKManager.registerApp(with: self)
     }
     
-//Pass the downloaded photos to StitchingViewController
+    //Pass the downloaded photos to StitchingViewController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Stitching" {
             if let imageArray = self.imageArray {
@@ -116,7 +96,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         }
     }
     
-//MARK: - DJISDKManagerDelegate Methods
+    //MARK: - DJISDKManagerDelegate Methods
     func productConnected(_ product: DJIBaseProduct?) {
         if product != nil {
             if let camera = self.fetchCamera() {
@@ -218,6 +198,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     func shootPanoRotateAircraft() {
         print("SS called shootPanoRotateAircraft")
         if DJISDKManager.product()?.model == DJIAircraftModelNameSpark {
+            //TODO: add spark logic
             print("TODO: add spark logic")
 //        [[DJISDKManager missionControl].activeTrackMissionOperator setGestureModeEnabled:NO withCompletion:^(NSError * _Nullable error) {
 //            weakReturn(target);
@@ -268,7 +249,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     
     func executeVirtualStickControl() {
         print("called executeVirtualStickControl")
-//    __weak DJICamera *camera = [self fetchCamera];
+        //__weak DJICamera *camera = [self fetchCamera];
         let camera = self.fetchCamera()
         
         for photoNumber in 0 ..< kNumberOfPhotosInPanorama {
@@ -287,7 +268,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             timer.invalidate()
             
             //TODO: how to destroy the timer?
-    //        timer = nil;
+            //        timer = nil;
             
             print("SS Shooting photo nunber \(photoNumber)")
             camera?.startShootPhoto(completion: { (error:Error?) in
@@ -335,7 +316,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         })
     }
 
-//MARK: - Shoot Panorama By Rotating Gimbal Methods
+    //MARK: - Shoot Panorama By Rotating Gimbal Methods
     func shootPanoRotateGimbal() {
         guard let camera = self.fetchCamera() else {
             print("fetchCamera returned nil")
@@ -410,7 +391,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         }
     }
     
-//MARK: - Rotate Drone With Waypoint Mission Methods
+    //MARK: - Rotate Drone With Waypoint Mission Methods
     func missionOperator() -> DJIWaypointMissionOperator? {
         return DJISDKManager.missionControl()?.waypointMissionOperator()
     }
@@ -458,11 +439,9 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         
         self.missionOperator()?.addListener(toUploadEvent: self, with: DispatchQueue.main, andBlock: { [weak self] (event:DJIWaypointMissionUploadEvent) in
             if event.currentState == DJIWaypointMissionState.uploading {
-                //NSString *message = [NSString stringWithFormat:@"Uploaded Waypoint Index: %ld, Total Waypoints: %ld" ,event.progress.uploadedWaypointIndex + 1, event.progress.totalWaypointCount];
                 guard let progress = event.progress else { return }
                 let message = "Uploaded Waypoint Index: \(progress.uploadedWaypointIndex + 1), Total Waypoints: \(progress.totalWaypointCount)"
                 
-                //TODO: still not sure about this unwrapping pattern...
                 if let _ = self?.uploadMissionProgressAlertController {
                     self?.uploadMissionProgressAlertController?.message = message
                 } else {
@@ -520,9 +499,8 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         })
     }
 
-//MARK: - Select the lastest photos for Panorama
+    //MARK: - Select the lastest photos for Panorama
     func selectPhotosForPlaybackMode() {
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async { [weak self] in
             print("in closure")
             let camera = self?.fetchCamera()
@@ -551,7 +529,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         }
     }
     
-//MARK: - Download the selected photos
+    //MARK: - Download the selected photos
     func downloadPhotosForPlaybackMode() {
         var finishedFileCount = 0
         var downloadedFileData = Data()
@@ -670,18 +648,12 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             let task = DJIFetchMediaTask.init(file: file, content: DJIFetchMediaTaskContent.preview) { [weak self] (file:DJIMediaFile, content:DJIFetchMediaTaskContent, error:Error?) in
                 guard let self = self else { return }
                 if let error = error {
-                    //                [target.downloadProgressAlert dismissWithClickedButtonIndex:0 animated:YES];
-                    //                target.downloadProgressAlert = nil;
-                    //                UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Download failed" message:[NSString stringWithFormat:@"Download file %@ failed. ", file.fileName] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    //                [alertView show];
                     self.downloadProgressAlert?.dismiss(animated: true, completion: nil)
                     self.downloadProgressAlert = nil
                     let downloadFailController = UIAlertController(title: "Download failed",
                                                                    message: "Download file \(file.fileName) failed. ",
                                                                    preferredStyle: .alert)
-                    
                 } else {
-//                [target.imageArray addObject:file.preview];
                     if let image = file.preview {
                         self.imageArray?.append(image)
                     }
@@ -715,7 +687,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             camera.mediaManager?.taskScheduler.moveTask(toEnd: task)
         }
     }
-//
+
     func showDownloadProgressAlert() {
         if self.downloadProgressAlert == nil {
             let downloadProgressAC = UIAlertController(title: "", message: "", preferredStyle: UIAlertController.Style.alert)
@@ -723,8 +695,8 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             self.present(downloadProgressAC, animated: true, completion: nil)
         }
     }
-//
-//MARK: - IBAction Methods
+
+    //MARK: - IBAction Methods
     @IBAction func onCaptureButtonClicked(_ sender: Any) {
         let alertController = UIAlertController(title: "Select Mode", message: "", preferredStyle: UIAlertController.Style.alert)
         let rotateAircraftAction = UIAlertAction(title: "Rotate Aircraft", style: UIAlertAction.Style.default) { [weak self] (action:UIAlertAction) in
@@ -768,9 +740,8 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         }
     }
     
-    //TODO: unused?
     func didUpdateDatabaseDownloadProgress(_ progress: Progress) {
-        //TODO
+        //TODO:unused?
     }
 
 }
