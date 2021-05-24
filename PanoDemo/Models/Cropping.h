@@ -3,7 +3,6 @@
 //  PanoDemo
 //
 //  Created by DJI on 15/7/31.
-//  Copyright (c) 2015年 DJI. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

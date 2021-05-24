@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  Swift-PanoramaDemo
+//  PanoDemo
 //
 
 import UIKit
