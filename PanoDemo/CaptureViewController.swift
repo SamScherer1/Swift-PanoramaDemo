@@ -13,12 +13,10 @@ import DJIWidget
 
 let kNumberOfPhotosInPanorama = 8
 let kRotationAngle = 45.0
-let kUseBridge = true
+let kUseBridge = false
 let kBridgeIP = "192.168.128.169"
 
 class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDelegate, DJISDKManagerDelegate, DJIFlightControllerDelegate, DJIVideoFeedListener {
-    
-    //#define kCaptureModeAlertTag 100
     
     @IBOutlet weak var fpvPreviewView: UIView!
     @IBOutlet weak var captureBtn: UIButton!
