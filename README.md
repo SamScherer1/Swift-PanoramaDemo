@@ -59,6 +59,10 @@ For this demo's tutorial: **Creating a Panorama Application**, please refer to <
 
 The tutorial is currently only available in Objective C, but there are plans to create a swift version.
 
+## Known Issues
+
+Due to the use of C++ for open cv stitching and clipping, some objective c++ files remain. This thread may be helpful in porting more of it to swift: https://stackoverflow.com/questions/35229149/interacting-with-c-classes-from-swift
+
 ## Feedback
 When reporting bugs, at a minimum please let us know:
 
