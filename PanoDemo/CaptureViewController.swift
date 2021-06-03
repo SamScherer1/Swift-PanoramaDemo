@@ -429,7 +429,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     //MARK: - Select the lastest photos for Panorama
     func selectPhotosForPlaybackMode() {
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async { [weak self] in
-            print("in closure")
             let camera = self?.fetchCamera()
             camera?.playbackManager?.enterMultiplePreviewMode()
             sleep(1)
