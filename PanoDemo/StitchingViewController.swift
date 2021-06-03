@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 class StitchingViewController : UIViewController {
-    @objc var imageArray : NSMutableArray? //TODO: use [UIImage] ?
+    @objc var imageArray : NSMutableArray?
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageView: UIImageView!

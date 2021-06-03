@@ -15,7 +15,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     @IBOutlet weak var downloadBtn: UIButton!
     @IBOutlet weak var stitchBtn: UIButton!
     
-    fileprivate let useBridge = true
+    fileprivate let useBridge = false
     fileprivate let bridgeIP = "192.168.128.169"
     
     var numberSelectedPhotos = 0
@@ -134,31 +134,31 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         self.present(alert, animated: true, completion: nil)
     }
     
-//MARK: - Shoot Panorama By Rotating Aircraft Methods
+    //MARK: - Shoot Panorama By Rotating Aircraft Methods
     func shootPanoRotateAircraft() {
         if DJISDKManager.product()?.model == DJIAircraftModelNameSpark {
             DJISDKManager.missionControl()?.activeTrackMissionOperator().setGestureModeEnabled(false, withCompletion: { [weak self] (error:Error?) in
                 if let error = error {
                     print("Set Gesture mode enabled failed: \(error.localizedDescription)")
                 } else {
-                    self?.setCameraModeToShootPhoto()//TODO: test in simulator...
+                    self?.setCameraModeAndTakePano()
                 }
             })
         } else {
-            self.setCameraModeToShootPhoto()//TODO: rename to something appropriate
+            self.setCameraModeAndTakePano()
         }
     }
 
-    func setCameraModeToShootPhoto() {
+    func setCameraModeAndTakePano() {
         let camera = self.fetchCamera()
         camera?.getModeWithCompletion({ [weak self] (mode:DJICameraMode, error:Error?) in
             if error == nil {
                 if mode == DJICameraMode.shootPhoto {
-                    self?.enableVirtualStick()
+                    self?.enableVirtualStickAndShootPano()
                 } else {
                     camera?.setMode(DJICameraMode.shootPhoto, withCompletion: { [weak self] (error:Error?) in
                         if error == nil {
-                            self?.enableVirtualStick()
+                            self?.enableVirtualStickAndShootPano()
                         }
                     })
                 }
@@ -166,7 +166,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         })
     }
     
-    func enableVirtualStick() {
+    func enableVirtualStickAndShootPano() {
         if let flightController = self.fetchFlightController() {
             flightController.yawControlMode = DJIVirtualStickYawControlMode.angle
             flightController.rollPitchCoordinateSystem = DJIVirtualStickFlightCoordinateSystem.ground
@@ -175,14 +175,14 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     print("Enable VirtualStickControlMode Failed with error: \(error.localizedDescription)")
                 } else {
                     DispatchQueue.main.async { [weak self] () in
-                        self?.executeVirtualStickControl()
+                        self?.executeVirtualStickControlPano()
                     }
                 }
             }
         }
     }
     
-    func executeVirtualStickControl() {
+    func executeVirtualStickControlPano() {
         let camera = self.fetchCamera()
         
         for photoNumber in 0 ..< numberOfPhotosInPanorama {
@@ -199,9 +199,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             RunLoop.current.add(timer, forMode: RunLoop.Mode.default)
             RunLoop.current.run(until: Date(timeIntervalSinceNow: 2))
             timer.invalidate()
-            
-            //TODO: how to destroy the timer?
-            //        timer = nil;
             
             print("Shooting photo nunber \(photoNumber)")
             camera?.startShootPhoto(completion: { (error:Error?) in
@@ -281,7 +278,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             print("SS Start Shoot Photo \(photoNumber)")
             
             camera.setShootPhotoMode(DJICameraShootPhotoMode.single) { (error:Error?) in
-                //dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()) {
                     camera.startShootPhoto { (error:Error?) in
                         if let error = error {
@@ -500,7 +496,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                 guard let self = self else { return }
                 self.downloadProgressAlert?.dismiss(animated: true, completion: nil)
                 self.downloadProgressAlert = nil
-                //TODO: do these 3 alert controllers need an ok button?
                 if let error = error {
                     let downloadFailController = UIAlertController(title: "Download failed",
                                                                   message: error.localizedDescription,
@@ -567,6 +562,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                                                   message: "Resume file task scheduler failed. ",
                                                   preferredStyle: UIAlertController.Style.alert)
                 self?.present(downloadFailedController, animated: true, completion: nil)
+                print("Download failed: Resume file task scheduler failed: \(error.localizedDescription)")
             }
         })
         
@@ -584,6 +580,8 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                     let downloadFailController = UIAlertController(title: "Download failed",
                                                                    message: "Download file \(file.fileName) failed. ",
                                                                    preferredStyle: .alert)
+                    self.present(downloadFailController, animated: true, completion: nil)
+                    print("Download file \(file.fileName) failed: \(error.localizedDescription)")
                 } else {
                     if let image = file.preview {
                         self.imageArray?.append(image)
@@ -634,10 +632,10 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             self?.shootPanoRotateAircraft()
         }
         let rotateGimbalAction = UIAlertAction(title: "Rotate Gimbal", style: UIAlertAction.Style.default) { [weak self] (action:UIAlertAction) in
-            self?.shootPanoRotateGimbal()//TODO: test this...
+            self?.shootPanoRotateGimbal()
         }
         let waypointMissionAction = UIAlertAction(title: "Waypoint Mission", style: UIAlertAction.Style.default) { [weak self] (action:UIAlertAction) in
-            self?.shootPanoWaypointMission()//TODO: test this...
+            self?.shootPanoWaypointMission()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction) in
             alertController.dismiss(animated: true, completion: nil)
@@ -672,8 +670,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         }
     }
     
-    func didUpdateDatabaseDownloadProgress(_ progress: Progress) {
-        //TODO:unused?
-    }
+    //Unused but required for DJISDKManagerDelegate
+    func didUpdateDatabaseDownloadProgress(_ progress: Progress) { }
 
 }
