@@ -1,10 +1,4 @@
 //
-//  CaptureViewController.swift
-//  PanoDemo
-//
-//  Created by Samuel Scherer on 4/28/21.
-//  Copyright © 2021 RIIS. All rights reserved.
-//
 
 import Foundation
 import UIKit
@@ -41,6 +35,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         self.registerApp()
     }
     
+    //TODO: is this button missing?
     // Hack to allow user to see FPV view (for some reason switching camera modes fixes the view not showing initially)
     func addCameraToggleButton() {
         let testBtn = UIButton(type: UIButton.ButtonType.system)
@@ -89,18 +84,16 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "Stitching" {
             if let imageArray = self.imageArray {
-                segue.destination.setValue(NSMutableArray(array: self.imageArray!), forKey: "imageArray")
+                segue.destination.setValue(NSMutableArray(array: imageArray), forKey: "imageArray")
             }
         }
     }
     
     //MARK: - DJISDKManagerDelegate Methods
     func productConnected(_ product: DJIBaseProduct?) {
-        if product != nil {
-            if let camera = self.fetchCamera() {
-                camera.delegate = self
-                camera.playbackManager?.delegate = self
-            }
+        if let camera = self.fetchCamera() {
+            camera.delegate = self
+            camera.playbackManager?.delegate = self
         }
 
         if let flightController = self.fetchFlightController() {
@@ -117,7 +110,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         }
         
         DJIVideoPreviewer.instance()?.setView(self.fpvPreviewView)
-        DJISDKManager.videoFeeder()?.primaryVideoFeed.add(self, with: nil)//TODO: add logic for enterprise drones with secondary feeds (FPV demo has it i think...)
+        DJISDKManager.videoFeeder()?.primaryVideoFeed.add(self, with: nil)
         DJIVideoPreviewer.instance()?.start()
     }
 
@@ -194,18 +187,14 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     
 //MARK: - Shoot Panorama By Rotating Aircraft Methods
     func shootPanoRotateAircraft() {
-        print("SS called shootPanoRotateAircraft")
         if DJISDKManager.product()?.model == DJIAircraftModelNameSpark {
-            //TODO: add spark logic
-            print("TODO: add spark logic")
-//        [[DJISDKManager missionControl].activeTrackMissionOperator setGestureModeEnabled:NO withCompletion:^(NSError * _Nullable error) {
-//            weakReturn(target);
-//            if (error) {
-//                NSLog(@"Set Gesture mode enabled failed");
-//            } else {
-//                [target setCameraModeToShootPhoto];
-//            }
-//        }];
+            DJISDKManager.missionControl()?.activeTrackMissionOperator().setGestureModeEnabled(false, withCompletion: { [weak self] (error:Error?) in
+                if let error = error {
+                    print("Set Gesture mode enabled failed: \(error.localizedDescription)")
+                } else {
+                    self?.setCameraModeToShootPhoto()//TODO: test in simulator...
+                }
+            })
         } else {
             self.setCameraModeToShootPhoto()//TODO: rename to something appropriate
         }
@@ -218,7 +207,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                 if mode == DJICameraMode.shootPhoto {
                     self?.enableVirtualStick()
                 } else {
-                    //TODO: is [weak self] necessay in the second closure?
                     camera?.setMode(DJICameraMode.shootPhoto, withCompletion: { [weak self] (error:Error?) in
                         if error == nil {
                             self?.enableVirtualStick()
@@ -229,7 +217,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         })
     }
     
-    func enableVirtualStick() {//TODO: rename something appropriate
+    func enableVirtualStick() {
         if let flightController = self.fetchFlightController() {
             flightController.yawControlMode = DJIVirtualStickYawControlMode.angle
             flightController.rollPitchCoordinateSystem = DJIVirtualStickFlightCoordinateSystem.ground
@@ -237,7 +225,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
                 if let error = error {
                     print("Enable VirtualStickControlMode Failed with error: \(error.localizedDescription)")
                 } else {
-                    DispatchQueue.main.async { [weak self] () in //Again, need to call weak self from closure inside closure?
+                    DispatchQueue.main.async { [weak self] () in
                         self?.executeVirtualStickControl()
                     }
                 }
@@ -246,8 +234,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
     
     func executeVirtualStickControl() {
-        print("called executeVirtualStickControl")
-        //__weak DJICamera *camera = [self fetchCamera];
         let camera = self.fetchCamera()
         
         for photoNumber in 0 ..< numberOfPhotosInPanorama {
@@ -268,12 +254,10 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             //TODO: how to destroy the timer?
             //        timer = nil;
             
-            print("SS Shooting photo nunber \(photoNumber)")
+            print("Shooting photo nunber \(photoNumber)")
             camera?.startShootPhoto(completion: { (error:Error?) in
                 if let error = error {
-                    print("SS Failed to shoot photo: \(error.localizedDescription)")
-                } else {
-                    print("SS Shot Photo!")
+                    print("Failed to shoot photo: \(error.localizedDescription)")
                 }
             })
             
@@ -701,10 +685,10 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
             self?.shootPanoRotateAircraft()
         }
         let rotateGimbalAction = UIAlertAction(title: "Rotate Gimbal", style: UIAlertAction.Style.default) { [weak self] (action:UIAlertAction) in
-            self?.shootPanoRotateAircraft()
+            self?.shootPanoRotateGimbal()//TODO: test this...
         }
         let waypointMissionAction = UIAlertAction(title: "Waypoint Mission", style: UIAlertAction.Style.default) { [weak self] (action:UIAlertAction) in
-            self?.shootPanoRotateAircraft()
+            self?.shootPanoWaypointMission()//TODO: test this...
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { (action:UIAlertAction) in
             alertController.dismiss(animated: true, completion: nil)

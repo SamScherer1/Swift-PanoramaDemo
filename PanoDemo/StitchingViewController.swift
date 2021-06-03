@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 class StitchingViewController : UIViewController {
-    public var imageArray : NSMutableArray? //TODO: use [UIImage] ?
+    @objc var imageArray : NSMutableArray? //TODO: use [UIImage] ?
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var imageView: UIImageView!
@@ -19,7 +19,8 @@ class StitchingViewController : UIViewController {
     override func viewDidLoad() {
         DispatchQueue.global(qos: DispatchQoS.QoSClass.default).async { [weak self] in
             guard let self = self else { return }
-            guard let stitchedImage = Stitching.image(with: self.imageArray) else {
+            guard let imageArray = self.imageArray else { return }
+            guard let stitchedImage = Stitching.image(with: imageArray) else {
                 self.showAlertWith(title: "Processing", message: "Stitching and cropping failed")
                 return
             }
