@@ -15,7 +15,7 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     @IBOutlet weak var downloadBtn: UIButton!
     @IBOutlet weak var stitchBtn: UIButton!
     
-    fileprivate let useBridge = false
+    fileprivate let useBridge = true
     fileprivate let bridgeIP = "192.168.128.169"
     
     var numberSelectedPhotos = 0
@@ -33,46 +33,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
         self.aircraftLocation = kCLLocationCoordinate2DInvalid
         super.viewDidLoad()
         self.registerApp()
-    }
-    
-    //TODO: is this button missing?
-    // Hack to allow user to see FPV view (for some reason switching camera modes fixes the view not showing initially)
-    func addCameraToggleButton() {
-        let testBtn = UIButton(type: UIButton.ButtonType.system)
-        self.view.addSubview(testBtn)
-        testBtn.translatesAutoresizingMaskIntoConstraints = false
-        testBtn.leftAnchor.constraint(equalTo: self.view.leftAnchor).isActive = true
-        testBtn.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
-        testBtn.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        testBtn.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        testBtn.backgroundColor = UIColor.lightGray
-        testBtn.setTitle("Toggle Camera Mode", for: UIControl.State.normal)
-        testBtn.addTarget(self, action: #selector(toggleCamera), for: UIControl.Event.touchUpInside)
-    }
-
-    //TODO: test this. is toggle camera btn working?
-    // Hack to allow user to see FPV view (for some reason switching camera modes fixes the view not showing initially)
-    @objc func toggleCamera() {
-        let camera = self.fetchCamera()
-        camera?.getModeWithCompletion({ (mode:DJICameraMode, error:Error?) in
-            if let error = error {
-                print(String(format: "Failed to get camera mode: %@", error.localizedDescription))
-            } else {
-                if mode == DJICameraMode.shootPhoto {
-                    camera?.setMode(DJICameraMode.recordVideo, withCompletion: { (error:Error?) in
-                        if let error = error {
-                            print(String(format: "Failed to set camera mode: %@", error.localizedDescription))
-                        }
-                    })
-                } else {
-                    camera?.setMode(DJICameraMode.shootPhoto, withCompletion: { (error:Error?) in
-                        if let error = error {
-                            print(String(format: "Failed to set camera mode: %@", error.localizedDescription))
-                        }
-                    })
-                }
-            }
-        })
     }
 
     func registerApp() {
@@ -154,17 +114,6 @@ class CaptureViewController : UIViewController, DJICameraDelegate, DJIPlaybackDe
     }
 
     //MARK: - Custom Methods
-    func cleanVideoPreview() {
-        DJIVideoPreviewer.instance()?.setView(nil)
-        DJISDKManager.videoFeeder()?.primaryVideoFeed.remove(self)
-        
-        // TODO: make this swifty
-        if self.fpvPreviewView != nil {
-            self.fpvPreviewView.removeFromSuperview()
-            self.fpvPreviewView = nil
-        }
-    }
-
     func fetchFlightController() -> DJIFlightController? {
         let aircraft = DJISDKManager.product() as? DJIAircraft
         return aircraft?.flightController
