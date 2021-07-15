@@ -13,7 +13,6 @@
 		4A57C72C45ACD09771D23046 /* libPods-PanoDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EE242CF8A3A287A146CCB73 /* libPods-PanoDemo.a */; };
 		A419408D1DCB41970076478C /* opencv2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A419408C1DCB41970076478C /* opencv2.framework */; };
 		A46985B021343CA6001A1F08 /* DJIWidget.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46985AF21343C97001A1F08 /* DJIWidget.framework */; };
-		A46985B121343CA6001A1F08 /* DJIWidget.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A46985AF21343C97001A1F08 /* DJIWidget.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A46985B521343CB0001A1F08 /* FFmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A46985B421343CAF001A1F08 /* FFmpeg.framework */; };
 		A46985B621343CB0001A1F08 /* FFmpeg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A46985B421343CAF001A1F08 /* FFmpeg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A48F79C51C5F59EF00654B9D /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = A48F79C41C5F59EF00654B9D /* libiconv.tbd */; };
@@ -53,7 +52,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				A46985B121343CA6001A1F08 /* DJIWidget.framework in Embed Frameworks */,
 				A46985B621343CB0001A1F08 /* FFmpeg.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
